@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -38,33 +39,18 @@ namespace ImgComparer
 
         private void sortToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            (int level, int max) = db.GetLevelToSort();
-
-            while (true)
+            int level = 0;
+            while (level < db.levels.Count)
             {
-                if (level == -1)
-                {
-                    MessageBox.Show("All sorted!");
-                    RefreshImages();
-                    return;
-                }
-
                 List<Image> toSort = db.GetImagesToSort(level);
-                if (level > max && toSort.Count == 0)
-                {
-                    MessageBox.Show("All sorted!");
-                    RefreshImages();
-                    return;
-                }
-
-                while (toSort.Count > 0)
+                if (toSort.Count == 0 && level == db.levels.Count - 1)
+                    break;
+                while (toSort.Count != 0)
                 {
                     if (toSort.Count == 1)
                     {
                         Image image = toSort[0];
-                        image.level++;
-                        image.score *= 2;
-                        image.baseScore *= 2;
+                        db.MoveImageToNextLevel(image, false);
                         toSort.Clear();
                     }
                     else
@@ -81,33 +67,8 @@ namespace ImgComparer
                         DialogResult result = compare.ShowDialog(this);
                         if (result == DialogResult.OK)
                         {
-                            int value;
-                            if (image1.baseScore == 0)
-                            {
-                                value = 1;
-                                image1.baseScore = 1;
-                                image2.baseScore = 1;
-                            }
-                            else
-                            {
-                                value = image1.baseScore;
-                                image1.baseScore *= 2;
-                                image2.baseScore *= 2;
-                            }
-                            if (compare.CompareResult)
-                            {
-                                // image2 is better
-                                image2.score += value;
-                            }
-                            else
-                            {
-                                // image1 is better
-                                image1.score += value;
-                            }
-                            image1.ScoreValue = (float)image1.score / image1.baseScore;
-                            image1.level++;
-                            image2.ScoreValue = (float)image2.score / image2.baseScore;
-                            image2.level++;
+                            db.MoveImageToNextLevel(image1, !compare.CompareResult);
+                            db.MoveImageToNextLevel(image2, compare.CompareResult);
                         }
                         else
                         {
@@ -117,8 +78,32 @@ namespace ImgComparer
                     }
                 }
 
+                db.MoveImagesToNextLevel(level);
+
                 ++level;
             }
+
+            db.Deflate();
+
+            RefreshImages();
+            MessageBox.Show("All sorted!");
+        }
+
+        private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            /*var column = dataGridView1.Columns[e.ColumnIndex];
+            SortOrder order;
+            if (dataGridView1.SortedColumn == column)
+            {
+                order = dataGridView1.SortOrder;
+                if (order == SortOrder.Descending)
+                    order = SortOrder.Ascending;
+                else
+                    order = SortOrder.Ascending;
+            }
+            else
+                order = SortOrder.Ascending;
+            dataGridView1.Sort(column, order == SortOrder.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);*/
         }
     }
 }

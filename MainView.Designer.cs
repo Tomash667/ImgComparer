@@ -32,13 +32,9 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Filename = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Score = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.imageBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.imageBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.sortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageBindingSource1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,6 +53,7 @@
             this.dataGridView1.Size = new System.Drawing.Size(800, 426);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
+            this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_ColumnHeaderMouseClick);
             // 
             // Filename
             // 
@@ -72,14 +69,6 @@
             this.Score.HeaderText = "Score";
             this.Score.Name = "Score";
             this.Score.ReadOnly = true;
-            // 
-            // imageBindingSource
-            // 
-            this.imageBindingSource.DataSource = typeof(ImgComparer.Image);
-            // 
-            // imageBindingSource1
-            // 
-            this.imageBindingSource1.DataSource = typeof(ImgComparer.Image);
             // 
             // menuStrip1
             // 
@@ -109,8 +98,6 @@
             this.Name = "MainView";
             this.Text = "MainView";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageBindingSource1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -119,8 +106,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.BindingSource imageBindingSource;
-        private System.Windows.Forms.BindingSource imageBindingSource1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Filename;
         private System.Windows.Forms.DataGridViewTextBoxColumn Score;
