@@ -5,12 +5,15 @@ namespace ImgComparer
 {
     public static class DHash
     {
-        public static long Calculate(System.Drawing.Image image)
+        public static ulong Calculate(string path)
         {
-            Bitmap bmp = ToGrayscale((Bitmap)image);
-            bmp = new Bitmap(bmp, 9, 8);
-            long hash = 0;
-            long bit = 1;
+            Bitmap image = new Bitmap(path);
+            Bitmap grayscale = ToGrayscale(image);
+            image.Dispose();
+            Bitmap bmp = new Bitmap(grayscale, 9, 8);
+            grayscale.Dispose();
+            ulong hash = 0;
+            ulong bit = 1;
             for (int y = 0; y < 8; ++y)
             {
                 int previous = bmp.GetPixel(0, y).R;
@@ -23,6 +26,7 @@ namespace ImgComparer
                     previous = current;
                 }
             }
+            bmp.Dispose();
             return hash;
         }
 
@@ -63,17 +67,17 @@ namespace ImgComparer
 
         private static readonly int[] counts = new int[] { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
 
-        private static int Distance(long hash1, long hash2)
+        public static int Distance(ulong hash1, ulong hash2)
         {
             int res = 0;
             int shift = 0;
-            long mask = 0xF;
+            ulong mask = 0xF;
             for (int i = 0; i < 16; i++)
             {
                 int h1 = (int)((hash1 & mask) >> shift);
                 int h2 = (int)((hash2 & mask) >> shift);
                 if (h1 != h2)
-			        res += counts[h1 ^ h2];
+                    res += counts[h1 ^ h2];
                 mask <<= 4;
                 shift += 4;
             }
