@@ -4,8 +4,9 @@
     {
         public string Filename { get; set; }
         public string Path => $"images/{Filename}";
-        public int level, score, baseScore;
+        //public int level, score, baseScore;
         public float ScoreValue { get; set; }
+        public long hash;
         public bool found;
     }
 }

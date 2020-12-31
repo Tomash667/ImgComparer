@@ -9,7 +9,7 @@ namespace ImgComparer
     public partial class MainView : Form
     {
         private Db db = new Db();
-        private List<Image> images;
+        private SortableList<Image> images;
 
         public MainView()
         {
@@ -22,8 +22,7 @@ namespace ImgComparer
 
         private void RefreshImages()
         {
-            images = db.images.Values.ToList();
-            dataGridView1.DataSource = null;
+            images = new SortableList<Image>(db.images.Values);
             dataGridView1.DataSource = images;
         }
 
@@ -39,71 +38,69 @@ namespace ImgComparer
 
         private void sortToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            int level = 0;
-            while (level < db.levels.Count)
+            if (db.newImages.Count == 0)
             {
-                List<Image> toSort = db.GetImagesToSort(level);
-                if (toSort.Count == 0 && level == db.levels.Count - 1)
-                    break;
-                while (toSort.Count != 0)
-                {
-                    if (toSort.Count == 1)
-                    {
-                        Image image = toSort[0];
-                        db.MoveImageToNextLevel(image, false);
-                        toSort.Clear();
-                    }
-                    else
-                    {
-                        int index = Utility.Rand % toSort.Count;
-                        Image image1 = toSort[index];
-                        toSort.RemoveAt(index);
-                        Image[] pick = toSort.Where(x => x.score == image1.score).ToArray();
-                        index = Utility.Rand % pick.Length;
-                        Image image2 = pick[index];
-                        toSort.Remove(image2);
-
-                        CompareView compare = new CompareView(image1, image2);
-                        DialogResult result = compare.ShowDialog(this);
-                        if (result == DialogResult.OK)
-                        {
-                            db.MoveImageToNextLevel(image1, !compare.CompareResult);
-                            db.MoveImageToNextLevel(image2, compare.CompareResult);
-                        }
-                        else
-                        {
-                            RefreshImages();
-                            return;
-                        }
-                    }
-                }
-
-                db.MoveImagesToNextLevel(level);
-
-                ++level;
+                MessageBox.Show("All sorted!");
+                return;
             }
 
-            db.Deflate();
+            while (db.newImages.Count != 0)
+            {
+                int index = Utility.Rand % db.newImages.Count;
+                Image image = db.newImages[index];
+                if (db.sortedImages.Count == 0)
+                {
+                    db.sortedImages.Add(image);
+                    db.newImages.RemoveAt(index);
+                    continue;
+                }
 
+                int L = 0, R = db.sortedImages.Count - 1;
+                while (true)
+                {
+                    int mid = (L + R) / 2;
+                    Image image2 = db.sortedImages[mid];
+                    CompareView compare = new CompareView(image, image2);
+                    DialogResult result = compare.ShowDialog(this);
+                    if (result == DialogResult.OK)
+                    {
+                        if (L == R || mid == 0)
+                        {
+                            db.sortedImages.Insert(compare.CompareResult ? L : L + 1, image);
+                            db.newImages.RemoveAt(index);
+                            break;
+                        }
+
+                        if (!compare.CompareResult)
+                            L = mid + 1;
+                        else
+                            R = mid - 1;
+                    }
+                    else
+                        return;
+                }
+            }
+
+            db.CalculateScore();
             RefreshImages();
             MessageBox.Show("All sorted!");
         }
 
         private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            /*var column = dataGridView1.Columns[e.ColumnIndex];
-            SortOrder order;
-            if (dataGridView1.SortedColumn == column)
+
+        }
+
+        private void Sort(string column, SortOrder order)
+        {
+            if(column == "Name")
             {
-                order = dataGridView1.SortOrder;
-                if (order == SortOrder.Descending)
-                    order = SortOrder.Ascending;
-                else
-                    order = SortOrder.Ascending;
+
             }
             else
-                order = SortOrder.Ascending;
-            dataGridView1.Sort(column, order == SortOrder.Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);*/
+            {
+
+            }
         }
     }
 }
