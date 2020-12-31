@@ -69,22 +69,27 @@ namespace ImgComparer
              Cache it.
             */
 
+            Type t = typeof(T);
             var sourceParameter = Expression.Parameter(typeof(List<T>), "source");
-            var lambdaParameter = Expression.Parameter(typeof(T), "lambdaParameter");
-            var accesedMember = typeof(T).GetProperty(prop.Name);
+            var lambdaParameter = Expression.Parameter(t, "lambdaParameter");
+            var accesedMember = t.GetProperty(prop.Name);
+            var attribute = (OrderByAttribute)accesedMember.GetCustomAttributes(typeof(OrderByAttribute), true).FirstOrDefault();
+            Type propertyType = accesedMember.PropertyType;
+            if (attribute != null)
+            {
+                accesedMember = t.GetProperty(attribute.field);
+                propertyType = accesedMember.PropertyType;
+            }
             var propertySelectorLambda =
-                Expression.Lambda(Expression.MakeMemberAccess(lambdaParameter,
-                                  accesedMember), lambdaParameter);
+                Expression.Lambda(Expression.MakeMemberAccess(lambdaParameter, accesedMember), lambdaParameter);
             var orderByMethod = typeof(Enumerable).GetMethods()
-                                          .Where(a => a.Name == orderByMethodName &&
-                                                       a.GetParameters().Length == 2)
+                                          .Where(a => a.Name == orderByMethodName && a.GetParameters().Length == 2)
                                           .Single()
-                                          .MakeGenericMethod(typeof(T), prop.PropertyType);
+                                          .MakeGenericMethod(t, propertyType);
 
             var orderByExpression = Expression.Lambda<Func<List<T>, IEnumerable<T>>>(
                                         Expression.Call(orderByMethod,
-                                                new Expression[] { sourceParameter,
-                                                               propertySelectorLambda }),
+                                                new Expression[] { sourceParameter, propertySelectorLambda }),
                                                 sourceParameter);
 
             cachedOrderByExpressions.Add(cacheKey, orderByExpression.Compile());

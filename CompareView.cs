@@ -32,12 +32,16 @@ namespace ImgComparer
             else
             {
                 btBoth.Hide();
+                tableLayoutPanel2.ColumnStyles[0].Width = 50;
+                tableLayoutPanel2.ColumnStyles[1].SizeType = SizeType.Absolute;
+                tableLayoutPanel2.ColumnStyles[1].Width = 0;
+                tableLayoutPanel2.ColumnStyles[2].Width = 50;
                 Text = "Which image is better?";
             }
             long size = new FileInfo(image1.path).Length;
-            label1.Text = $"File:{image1.Filename}, Size:{Utility.BytesToString(size)}, Resolution:{pictureBox1.Width}x{pictureBox1.Height}";
+            label1.Text = $"File:{image1.Filename}, Size:{Utility.BytesToString(size)}, Resolution:{pictureBox1.Image.Width}x{pictureBox1.Image.Height}";
             size = new FileInfo(image2.path).Length;
-            label2.Text = $"File:{image2.Filename}, Size:{Utility.BytesToString(size)}, Resolution:{pictureBox2.Width}x{pictureBox2.Height}";
+            label2.Text = $"File:{image2.Filename}, Size:{Utility.BytesToString(size)}, Resolution:{pictureBox2.Image.Width}x{pictureBox2.Image.Height}";
         }
 
         protected override void Dispose(bool disposing)

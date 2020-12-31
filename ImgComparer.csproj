@@ -70,6 +70,7 @@
     <Compile Include="MainView.Designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
+    <Compile Include="OrderByAttribute.cs" />
     <Compile Include="Preview.cs">
       <SubType>Form</SubType>
     </Compile>

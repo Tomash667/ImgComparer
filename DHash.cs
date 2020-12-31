@@ -5,11 +5,9 @@ namespace ImgComparer
 {
     public static class DHash
     {
-        public static ulong Calculate(string path)
+        public static ulong Calculate(Bitmap image)
         {
-            Bitmap image = new Bitmap(path);
             Bitmap grayscale = ToGrayscale(image);
-            image.Dispose();
             Bitmap bmp = new Bitmap(grayscale, 9, 8);
             grayscale.Dispose();
             ulong hash = 0;

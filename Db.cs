@@ -141,11 +141,16 @@ namespace ImgComparer
                         path = $"{path}\\{newFile}",
                         found = true
                     };
-                    image.hash = DHash.Calculate(image.path);
+                    System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(image.path);
+                    image.hash = DHash.Calculate(bmp);
+                    image.width = bmp.Width;
+                    image.height = bmp.Height;
+                    image.size = new FileInfo(image.path).Length;
+                    bmp.Dispose();
                     foreach (Image image2 in imagesDict.Select(x => x.Value).Where(x => x.found))
                     {
                         int dist = DHash.Distance(image.hash, image2.hash);
-                        if (dist <= 16)
+                        if (dist < 8)
                         {
                             duplicates.Add(new Duplicate
                             {
@@ -173,7 +178,7 @@ namespace ImgComparer
             decimal sum = 1;
             foreach (Image image in sortedImages)
             {
-                image.ScoreValue = (int)sum;
+                image.score = sum;
                 sum += mod;
             }
         }

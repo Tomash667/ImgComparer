@@ -150,7 +150,7 @@ namespace ImgComparer
 
             foreach (Image image in db.missing)
             {
-                if (image.ScoreValue != 0)
+                if (image.score != 0)
                     db.sortedImages.Remove(image);
                 else
                     db.newImages.Remove(image);
@@ -190,9 +190,9 @@ namespace ImgComparer
                 {
                 case CompareView.Result.Left:
                     // replace existing
-                    if (duplicate.image2.ScoreValue != 0)
+                    if (duplicate.image2.score != 0)
                     {
-                        duplicate.image1.ScoreValue = duplicate.image2.ScoreValue;
+                        duplicate.image1.score = duplicate.image2.score;
                         int index = db.sortedImages.IndexOf(duplicate.image2);
                         db.sortedImages[index] = duplicate.image1;
                         db.newImages.Remove(duplicate.image1);
