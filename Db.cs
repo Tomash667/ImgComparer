@@ -15,6 +15,7 @@ namespace ImgComparer
         public List<Image> newImages = new List<Image>();
         public List<Image> sortedImages = new List<Image>();
         public List<Image> missing = new List<Image>();
+        public List<string> exactDuplicates = new List<string>();
         public string path;
         private string filePath => $"{path}\\images.db";
         public List<Duplicate> duplicates;
@@ -110,6 +111,7 @@ namespace ImgComparer
         public void Scan(Action<int> progress)
         {
             missing.Clear();
+            exactDuplicates.Clear();
             foreach (KeyValuePair<string, Image> kvp in imagesDict)
                 kvp.Value.found = false;
 
@@ -147,10 +149,18 @@ namespace ImgComparer
                     image.height = bmp.Height;
                     image.size = new FileInfo(image.path).Length;
                     bmp.Dispose();
+
                     foreach (Image image2 in imagesDict.Select(x => x.Value).Where(x => x.found))
                     {
                         int dist = DHash.Distance(image.hash, image2.hash);
-                        if (dist < 8)
+                        if(dist == 0 && image.size == image2.size && image.ResolutionValue == image2.ResolutionValue)
+                        {
+                            // exact duplicate, autodelete
+                            exactDuplicates.Add(image.path);
+                            image = null;
+                            break;
+                        }
+                        else if (dist < 8)
                         {
                             duplicates.Add(new Duplicate
                             {
@@ -160,8 +170,12 @@ namespace ImgComparer
                             });
                         }
                     }
-                    imagesDict[newFile] = image;
-                    newImages.Add(image);
+
+                    if (image != null)
+                    {
+                        imagesDict[newFile] = image;
+                        newImages.Add(image);
+                    }
                     ++index;
                     progress(100 * index / newFiles.Count);
                 }

@@ -22,12 +22,22 @@ namespace ImgComparer
             pictureBox1.Image = System.Drawing.Image.FromFile(image1.path);
             pictureBox2.Image = System.Drawing.Image.FromFile(image2.path);
             DialogResult = DialogResult.Cancel;
+            long size1 = new FileInfo(image1.path).Length;
+            label1.Text = $"File:{image1.Filename}, Size:{Utility.BytesToString(size1)}, Resolution:{pictureBox1.Image.Width}x{pictureBox1.Image.Height}";
+            long size2 = new FileInfo(image2.path).Length;
+            label2.Text = $"File:{image2.Filename}, Size:{Utility.BytesToString(size2)}, Resolution:{pictureBox2.Image.Width}x{pictureBox2.Image.Height}";
             if (conflict.HasValue)
             {
                 btLeft.Text = "Replace with this";
                 btRight.Text = "Keep original";
                 btBoth.Text = $"Keep both \n({conflict.Value} distance)";
                 Text = "Possible duplicate found";
+                int res1 = pictureBox1.Image.Width * pictureBox1.Image.Height;
+                int res2 = pictureBox2.Image.Width * pictureBox2.Image.Height;
+                if (size2 >= size1 && res2 >= res1)
+                    btRight.Font = new System.Drawing.Font(btRight.Font, System.Drawing.FontStyle.Bold);
+                else if (size1 >= size2 && res1 >= res2)
+                    btLeft.Font = new System.Drawing.Font(btLeft.Font, System.Drawing.FontStyle.Bold);
             }
             else
             {
@@ -38,10 +48,7 @@ namespace ImgComparer
                 tableLayoutPanel2.ColumnStyles[2].Width = 50;
                 Text = "Which image is better?";
             }
-            long size = new FileInfo(image1.path).Length;
-            label1.Text = $"File:{image1.Filename}, Size:{Utility.BytesToString(size)}, Resolution:{pictureBox1.Image.Width}x{pictureBox1.Image.Height}";
-            size = new FileInfo(image2.path).Length;
-            label2.Text = $"File:{image2.Filename}, Size:{Utility.BytesToString(size)}, Resolution:{pictureBox2.Image.Width}x{pictureBox2.Image.Height}";
+
         }
 
         protected override void Dispose(bool disposing)

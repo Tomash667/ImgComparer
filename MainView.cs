@@ -73,7 +73,7 @@ namespace ImgComparer
                         DialogResult result = compare.ShowDialog(this);
                         if (result == DialogResult.OK)
                         {
-                            if (L == R || mid == 0)
+                            if (L == R || L == mid)
                             {
                                 db.sortedImages.Insert(compare.CompareResult == CompareView.Result.Right ? L : L + 1, image);
                                 db.newImages.RemoveAt(index);
@@ -148,6 +148,9 @@ namespace ImgComparer
             int newImages = db.newImages.Count - imageCount;
             Enabled = true;
 
+            foreach (string path in db.exactDuplicates)
+                DeleteSafe(path);
+
             foreach (Image image in db.missing)
             {
                 if (image.score != 0)
@@ -167,7 +170,8 @@ namespace ImgComparer
                 $"New images: {newImages}\n" +
                 $"Replaced images: {replaced}\n" +
                 $"Possible duplicates: {db.duplicates.Count}\n" +
-                $"Removed images: {db.missing.Count}");
+                $"Removed duplicates: {db.exactDuplicates.Count}\n" +
+                $"Missing images: {db.missing.Count}");
         }
 
         private (int, int) ResolveDuplicates()
@@ -261,6 +265,48 @@ namespace ImgComparer
                         return;
                 }
             }
+        }
+
+        private void previewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = dataGridView1.CurrentRow.Index;
+            Image image = images[index];
+            using (Preview preview = new Preview(image))
+            {
+                if (preview.Ok)
+                    preview.ShowDialog(this);
+            }
+        }
+
+        private void dataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex != -1 && e.RowIndex != -1 && e.Button == MouseButtons.Right)
+            {
+                DataGridViewCell c = (sender as DataGridView)[e.ColumnIndex, e.RowIndex];
+                if (!c.Selected)
+                {
+                    c.DataGridView.ClearSelection();
+                    c.DataGridView.CurrentCell = c;
+                    c.Selected = true;
+                }
+            }
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            if (dataGridView1.CurrentRow == null || dataGridView1.CurrentRow.Index == -1)
+                e.Cancel = true;
+            var point = dataGridView1.PointToClient(Cursor.Position);
+            var hit = dataGridView1.HitTest(point.X, point.Y);
+            if (hit.Type != DataGridViewHitTestType.Cell && hit.Type != DataGridViewHitTestType.RowHeader)
+                e.Cancel = true;
+        }
+
+        private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = dataGridView1.CurrentRow.Index;
+            Image image = images[index];
+            System.Diagnostics.Process.Start("explorer.exe", $"/select, \"{image.path}\"");
         }
     }
 }
