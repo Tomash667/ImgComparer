@@ -308,5 +308,14 @@ namespace ImgComparer
             Image image = images[index];
             System.Diagnostics.Process.Start("explorer.exe", $"/select, \"{image.path}\"");
         }
+
+        private void reverseSearchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = dataGridView1.CurrentRow.Index;
+            Image image = images[index];
+            string[] urls = Tools.ReverseImageSearch.GetSearchUrl(image);
+            foreach (string url in urls)
+                System.Diagnostics.Process.Start(url);
+        }
     }
 }
