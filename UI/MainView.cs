@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace ImgComparer.UI
@@ -22,6 +23,12 @@ namespace ImgComparer.UI
             sortToolStripMenuItem1.Enabled = false;
             resolveDuplicatesToolStripMenuItem.Enabled = false;
             toolStripStatusLabel1.Text = "";
+            typeof(DataGridView).InvokeMember(
+               "DoubleBuffered",
+               BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
+               null,
+               dataGridView1,
+               new object[] { true });
         }
 
         private void RefreshImages()
@@ -50,8 +57,11 @@ namespace ImgComparer.UI
                 return;
             }
 
-            bool anythingDone = false;
-            while (db.newImages.Count != 0)
+            CompareView compare = new CompareView(false);
+            Enabled = false;
+            compare.Owner = this;
+            bool anythingDone = false, cancel = false;
+            while (db.newImages.Count != 0 && !cancel)
             {
                 int index = Utility.Rand % db.newImages.Count;
                 Image image = db.newImages[index];
@@ -68,36 +78,37 @@ namespace ImgComparer.UI
                 {
                     int mid = (L + R) / 2;
                     Image image2 = db.sortedImages[mid];
-                    using (CompareView compare = new CompareView(image, image2, null))
+                    DialogResult result = compare.Show(image, image2, null);
+                    if (result == DialogResult.OK)
                     {
-                        DialogResult result = compare.ShowDialog(this);
-                        if (result == DialogResult.OK)
+                        if (L == R || L == mid)
                         {
-                            if (L == R || L == mid)
-                            {
-                                db.sortedImages.Insert(compare.CompareResult == CompareView.Result.Right ? L : L + 1, image);
-                                db.newImages.RemoveAt(index);
-                                anythingDone = true;
-                                break;
-                            }
+                            db.sortedImages.Insert(compare.CompareResult == CompareView.Result.Right ? L : L + 1, image);
+                            db.newImages.RemoveAt(index);
+                            anythingDone = true;
+                            break;
+                        }
 
-                            if (compare.CompareResult == CompareView.Result.Left)
-                                L = mid + 1;
-                            else
-                                R = mid - 1;
-                        }
+                        if (compare.CompareResult == CompareView.Result.Left)
+                            L = mid + 1;
                         else
-                        {
-                            if (anythingDone)
-                                UpdateStatus();
-                            return;
-                        }
+                            R = mid - 1;
+                    }
+                    else
+                    {
+                        cancel = true;
+                        break;
                     }
                 }
             }
 
-            UpdateStatus();
-            MessageBox.Show("All sorted!");
+            compare.Close();
+            Enabled = true;
+            Activate();
+            if (anythingDone)
+                UpdateStatus();
+            if (!cancel)
+                MessageBox.Show("All sorted!");
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -176,21 +187,21 @@ namespace ImgComparer.UI
 
         private (int, int) ResolveDuplicates()
         {
+            if (db.duplicates.Count == 0)
+                return (0, 0);
+
             int replaced = 0, removed = 0;
+            CompareView compare = new CompareView(true);
+            Enabled = false;
 
             while (db.duplicates.Count > 0)
             {
                 Duplicate duplicate = db.duplicates[0];
-                CompareView.Result compareResult;
-                using (CompareView compare = new CompareView(duplicate.image1, duplicate.image2, duplicate.dist))
-                {
-                    DialogResult result = compare.ShowDialog(this);
-                    if (result != DialogResult.OK)
-                        break;
-                    compareResult = compare.CompareResult;
-                }
+                DialogResult result = compare.Show(duplicate.image1, duplicate.image2, duplicate.dist);
+                if (result != DialogResult.OK)
+                    break;
 
-                switch (compareResult)
+                switch (compare.CompareResult)
                 {
                 case CompareView.Result.Left:
                     // replace existing
@@ -229,6 +240,9 @@ namespace ImgComparer.UI
                 }
             }
 
+            compare.Close();
+            Enabled = true;
+            Activate();
             return (replaced, removed);
         }
 
