@@ -68,26 +68,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Db.cs" />
-    <Compile Include="CompareView.cs">
+    <Compile Include="UI\CompareView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CompareView.Designer.cs">
+    <Compile Include="UI\CompareView.Designer.cs">
       <DependentUpon>CompareView.cs</DependentUpon>
     </Compile>
-    <Compile Include="DHash.cs" />
+    <Compile Include="Tools\DHash.cs" />
     <Compile Include="Model\Duplicate.cs" />
     <Compile Include="Model\Image.cs" />
-    <Compile Include="MainView.cs">
+    <Compile Include="UI\MainView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainView.Designer.cs">
+    <Compile Include="UI\MainView.Designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
     <Compile Include="OrderByAttribute.cs" />
-    <Compile Include="Preview.cs">
+    <Compile Include="UI\Preview.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Preview.Designer.cs">
+    <Compile Include="UI\Preview.Designer.cs">
       <DependentUpon>Preview.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -95,13 +95,13 @@
     <Compile Include="SortableList.cs" />
     <Compile Include="Tools\ReverseImageSearch.cs" />
     <Compile Include="Utility.cs" />
-    <EmbeddedResource Include="CompareView.resx">
+    <EmbeddedResource Include="UI\CompareView.resx">
       <DependentUpon>CompareView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainView.resx">
+    <EmbeddedResource Include="UI\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Preview.resx">
+    <EmbeddedResource Include="UI\Preview.resx">
       <DependentUpon>Preview.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

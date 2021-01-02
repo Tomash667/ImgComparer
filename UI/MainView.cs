@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 
-namespace ImgComparer
+namespace ImgComparer.UI
 {
     public partial class MainView : Form
     {

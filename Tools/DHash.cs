@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace ImgComparer
+namespace ImgComparer.Tools
 {
     public static class DHash
     {

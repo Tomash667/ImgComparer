@@ -1,4 +1,4 @@
-﻿namespace ImgComparer
+﻿namespace ImgComparer.UI
 {
     partial class MainView
     {

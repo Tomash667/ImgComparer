@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 
-namespace ImgComparer
+namespace ImgComparer.UI
 {
     public partial class CompareView : Form
     {
@@ -48,7 +48,6 @@ namespace ImgComparer
                 tableLayoutPanel2.ColumnStyles[2].Width = 50;
                 Text = "Which image is better?";
             }
-
         }
 
         protected override void Dispose(bool disposing)

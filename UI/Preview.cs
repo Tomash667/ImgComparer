@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace ImgComparer
+namespace ImgComparer.UI
 {
     public partial class Preview : Form
     {

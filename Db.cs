@@ -1,4 +1,5 @@
 ﻿using ImgComparer.Model;
+using ImgComparer.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
