@@ -54,21 +54,17 @@ namespace ImgComparer.UI
             pictureBox1.Image = System.Drawing.Image.FromFile(image1.path);
             pictureBox2.Image = System.Drawing.Image.FromFile(image2.path);
             DialogResult = DialogResult.None;
-            long size1 = new FileInfo(image1.path).Length;
-            label1.Text = $"File:{image1.Filename}, Size:{Utility.BytesToString(size1)}, Resolution:{pictureBox1.Image.Width}x{pictureBox1.Image.Height}";
-            long size2 = new FileInfo(image2.path).Length;
-            label2.Text = $"File:{image2.Filename}, Size:{Utility.BytesToString(size2)}, Resolution:{pictureBox2.Image.Width}x{pictureBox2.Image.Height}";
+            textBox1.Text = $"File:​\u200B{image1.Filename} Size:\u200B{Utility.BytesToString(image1.size)} Resolution:\u200B{image1.Resolution}";
+            textBox2.Text = $"File:\u200B{image2.Filename} Size:\u200B{Utility.BytesToString(image2.size)} Resolution:\u200B{image2.Resolution}";
             if (dist.HasValue)
             {
                 btBoth.Text = $"Keep both\n({dist.Value} distance)";
-                int res1 = pictureBox1.Image.Width * pictureBox1.Image.Height;
-                int res2 = pictureBox2.Image.Width * pictureBox2.Image.Height;
-                if (size2 >= size1 && res2 >= res1)
+                if (image2.size >= image1.size && image2.ResolutionValue >= image1.ResolutionValue)
                 {
                     btRight.Font = boldFont;
                     btLeft.Font = normalFont;
                 }
-                else if (size1 >= size2 && res1 >= res2)
+                else if (image1.size >= image2.size && image1.ResolutionValue >= image2.ResolutionValue)
                 {
                     btLeft.Font = boldFont;
                     btRight.Font = normalFont;

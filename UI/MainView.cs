@@ -42,7 +42,7 @@ namespace ImgComparer.UI
             if (e.RowIndex == -1)
                 return;
             Image image = images[e.RowIndex];
-            using (Preview preview = new Preview(image))
+            using (Preview preview = new Preview(image, images))
             {
                 if (preview.Ok)
                     preview.ShowDialog(this);
@@ -285,7 +285,7 @@ namespace ImgComparer.UI
         {
             int index = dataGridView1.CurrentRow.Index;
             Image image = images[index];
-            using (Preview preview = new Preview(image))
+            using (Preview preview = new Preview(image, images))
             {
                 if (preview.Ok)
                     preview.ShowDialog(this);
