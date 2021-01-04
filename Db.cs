@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace ImgComparer
 {
-    class Db
+    public class Db
     {
         private readonly byte[] Sign = new byte[] { (byte)'I', (byte)'M', (byte)'G', 0xDB };
         private readonly string[] excludedExt = new string[] { ".db" };
@@ -161,7 +161,7 @@ namespace ImgComparer
                             image = null;
                             break;
                         }
-                        else if (dist < 8)
+                        else if (dist < 8 && !duplicates.Any(x => x.image1 == image2 && x.image2 == image))
                         {
                             duplicates.Add(new Duplicate
                             {
@@ -195,6 +195,41 @@ namespace ImgComparer
             {
                 image.score = sum;
                 sum += mod;
+            }
+        }
+
+        public void RecalculateHashes(Action<int> progress)
+        {
+            int count = imagesDict.Count * 2;
+            int index = 0;
+            foreach(Image image in imagesDict.Select(x => x.Value))
+            {
+                System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(image.path);
+                image.hash = DHash.Calculate(bmp);
+                bmp.Dispose();
+                ++index;
+                progress((int)(100.0f * index / count));
+            }
+            foreach (Image image in imagesDict.Select(x => x.Value))
+            {
+                foreach(Image image2 in imagesDict.Select(x => x.Value))
+                {
+                    if (image != image2)
+                    {
+                        int dist = DHash.Distance(image.hash, image2.hash);
+                        if (dist < 8 && !duplicates.Any(x => x.image1 == image2 && x.image2 == image))
+                        {
+                            duplicates.Add(new Duplicate
+                            {
+                                image1 = image,
+                                image2 = image2,
+                                dist = dist
+                            });
+                        }
+                    }
+                }
+                ++index;
+                progress((int)(100.0f * index / count));
             }
         }
     }

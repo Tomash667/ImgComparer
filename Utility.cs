@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
 namespace ImgComparer
 {
@@ -45,6 +48,24 @@ namespace ImgComparer
             int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
             double num = Math.Round(bytes / Math.Pow(1024, place), 1);
             return (Math.Sign(byteCount) * num).ToString() + suf[place];
+        }
+
+        public static void SafeDelete(IWin32Window owner, string path)
+        {
+            while (File.Exists(path))
+            {
+                try
+                {
+                    FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    DialogResult result = MessageBox.Show(owner, $"Failed to delete file {path}.\n{ex.Message}", "Retry?", MessageBoxButtons.RetryCancel);
+                    if (result == DialogResult.Cancel)
+                        return;
+                }
+            }
         }
     }
 }

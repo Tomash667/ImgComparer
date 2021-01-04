@@ -1,7 +1,8 @@
 ﻿using ImgComparer.Model;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -78,7 +79,7 @@ namespace ImgComparer.UI
                 {
                     int mid = (L + R) / 2;
                     Image image2 = db.sortedImages[mid];
-                    DialogResult result = compare.Show(image, image2, null);
+                    DialogResult result = compare.Show(image, image2);
                     if (result == DialogResult.OK)
                     {
                         if (L == R || L == mid)
@@ -160,7 +161,7 @@ namespace ImgComparer.UI
             Enabled = true;
 
             foreach (string path in db.exactDuplicates)
-                DeleteSafe(path);
+                Utility.SafeDelete(this, path);
 
             foreach (Image image in db.missing)
             {
@@ -192,12 +193,15 @@ namespace ImgComparer.UI
 
             int replaced = 0, removed = 0;
             CompareView compare = new CompareView(true);
+            compare.Owner = this;
             Enabled = false;
 
-            while (db.duplicates.Count > 0)
+            bool cancel = false;
+            while (db.duplicates.Count > 0 && !cancel)
             {
                 Duplicate duplicate = db.duplicates[0];
-                DialogResult result = compare.Show(duplicate.image1, duplicate.image2, duplicate.dist);
+                bool complex = db.duplicates.Any(x => x != duplicate && x.IsSameImage(duplicate));
+                DialogResult result = compare.Show(duplicate.image1, duplicate.image2, duplicate.dist, complex);
                 if (result != DialogResult.OK)
                     break;
 
@@ -212,7 +216,7 @@ namespace ImgComparer.UI
                         db.sortedImages[index] = duplicate.image1;
                         db.newImages.Remove(duplicate.image1);
                         db.imagesDict.Remove(duplicate.image2.Filename);
-                        DeleteSafe(duplicate.image2.path);
+                        Utility.SafeDelete(this, duplicate.image2.path);
                         db.duplicates.RemoveAll(x => x.image1 == duplicate.image2 || x.image2 == duplicate.image2);
                         ++replaced;
                     }
@@ -220,7 +224,7 @@ namespace ImgComparer.UI
                     {
                         db.newImages.Remove(duplicate.image2);
                         db.imagesDict.Remove(duplicate.image2.Filename);
-                        DeleteSafe(duplicate.image2.path);
+                        Utility.SafeDelete(this, duplicate.image2.path);
                         db.duplicates.RemoveAll(x => x.image1 == duplicate.image2 || x.image2 == duplicate.image2);
                         ++removed;
                     }
@@ -229,13 +233,42 @@ namespace ImgComparer.UI
                     // keep existing
                     db.newImages.Remove(duplicate.image1);
                     db.imagesDict.Remove(duplicate.image1.Filename);
-                    DeleteSafe(duplicate.image1.path);
+                    Utility.SafeDelete(this, duplicate.image1.path);
                     db.duplicates.RemoveAll(x => x.image1 == duplicate.image1 || x.image2 == duplicate.image1);
                     ++removed;
                     break;
                 case CompareView.Result.Both:
                     // keep both
                     db.duplicates.RemoveAt(0);
+                    break;
+                case CompareView.Result.Complex:
+                    {
+                        List<Duplicate> dups = db.duplicates.Where(x => x.IsSameImage(duplicate)).ToList();
+                        List<Image> dupImages = new List<Image>();
+                        foreach (Duplicate dup in dups)
+                        {
+                            if (!dupImages.Contains(dup.image1))
+                                dupImages.Add(dup.image1);
+                            if (!dupImages.Contains(dup.image2))
+                                dupImages.Add(dup.image2);
+                        }
+                        List<DuplicateItem> dupItems = dupImages
+                            .Select(x => new DuplicateItem { image = x })
+                            .ToList();
+                        compare.Hide();
+                        using (MultiCompareView view = new MultiCompareView(db, dupItems))
+                        {
+                            DialogResult result2 = view.ShowDialog(this);
+                            if (result2 == DialogResult.Cancel)
+                                cancel = true;
+                            else if (result2 == DialogResult.OK)
+                            {
+                                db.duplicates.RemoveAll(x => dups.Contains(x));
+                                replaced += view.replaced;
+                                removed += view.removed;
+                            }
+                        }
+                    }
                     break;
                 }
             }
@@ -261,24 +294,6 @@ namespace ImgComparer.UI
             (int replaced, int removed) = ResolveDuplicates();
             if (replaced > 0 || removed > 0)
                 UpdateStatus();
-        }
-
-        private void DeleteSafe(string path)
-        {
-            while (true)
-            {
-                try
-                {
-                    File.Delete(path);
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    DialogResult result = MessageBox.Show(this, $"Failed to delete file {path}.\n{ex.Message}", "Retry?", MessageBoxButtons.RetryCancel);
-                    if (result == DialogResult.Cancel)
-                        return;
-                }
-            }
         }
 
         private void previewToolStripMenuItem_Click(object sender, EventArgs e)
@@ -330,6 +345,28 @@ namespace ImgComparer.UI
             string[] urls = Tools.ReverseImageSearch.GetSearchUrl(image);
             foreach (string url in urls)
                 System.Diagnostics.Process.Start(url);
+        }
+
+        private void recalculateHashesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are sure you want to recalculate hashes?\nIt's a slow operation that will check all duplicates again.",
+                "Recalculate hashes", MessageBoxButtons.YesNo) == DialogResult.No)
+                return;
+
+            Enabled = false;
+
+            Ookii.Dialogs.WinForms.ProgressDialog dialog = new Ookii.Dialogs.WinForms.ProgressDialog();
+            dialog.Text = "Recalculating hashes...";
+            dialog.DoWork += (k, v) => db.RecalculateHashes(p => dialog.ReportProgress(p));
+            dialog.RunWorkerCompleted += Dialog_RunWorkerCompleted1;
+            dialog.Show(this);
+        }
+
+        private void Dialog_RunWorkerCompleted1(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Enabled = true;
+            ResolveDuplicates();
+            UpdateStatus();
         }
     }
 }

@@ -13,7 +13,8 @@ namespace ImgComparer.UI
         {
             Left,
             Right,
-            Both
+            Both,
+            Complex
         }
 
         public Result CompareResult { get; private set; }
@@ -34,6 +35,7 @@ namespace ImgComparer.UI
             else
             {
                 btBoth.Hide();
+                btComplex.Hide();
                 tableLayoutPanel2.ColumnStyles[0].Width = 50;
                 tableLayoutPanel2.ColumnStyles[1].SizeType = SizeType.Absolute;
                 tableLayoutPanel2.ColumnStyles[1].Width = 0;
@@ -49,7 +51,7 @@ namespace ImgComparer.UI
             base.Dispose(disposing);
         }
 
-        public DialogResult Show(Image image1, Image image2, int? dist)
+        public DialogResult Show(Image image1, Image image2, int? dist = null, bool complex = false)
         {
             pictureBox1.Image = System.Drawing.Image.FromFile(image1.path);
             pictureBox2.Image = System.Drawing.Image.FromFile(image2.path);
@@ -74,6 +76,7 @@ namespace ImgComparer.UI
                     btLeft.Font = normalFont;
                     btRight.Font = normalFont;
                 }
+                btComplex.Enabled = complex;
             }
 
             Show();
@@ -106,6 +109,12 @@ namespace ImgComparer.UI
         private void btBoth_Click(object sender, EventArgs e)
         {
             CompareResult = Result.Both;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void btComplex_Click(object sender, EventArgs e)
+        {
+            CompareResult = Result.Complex;
             DialogResult = DialogResult.OK;
         }
 

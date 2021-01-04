@@ -35,6 +35,10 @@
             this.Score = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Resolution = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.previewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reverseSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,18 +47,15 @@
             this.scanDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resolveDuplicatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.recalculateHashesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vistaFolderBrowserDialog1 = new Ookii.Dialogs.WinForms.VistaFolderBrowserDialog();
             this.progressDialog1 = new Ookii.Dialogs.WinForms.ProgressDialog(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.previewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reverseSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -70,6 +71,7 @@
             this.dataGridView1.ContextMenuStrip = this.contextMenuStrip1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 24);
+            this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -106,6 +108,38 @@
             this.Resolution.HeaderText = "Resolution";
             this.Resolution.Name = "Resolution";
             this.Resolution.ReadOnly = true;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.previewToolStripMenuItem,
+            this.openInExplorerToolStripMenuItem,
+            this.reverseSearchToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 70);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // previewToolStripMenuItem
+            // 
+            this.previewToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
+            this.previewToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.previewToolStripMenuItem.Text = "Preview";
+            this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
+            // 
+            // openInExplorerToolStripMenuItem
+            // 
+            this.openInExplorerToolStripMenuItem.Name = "openInExplorerToolStripMenuItem";
+            this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.openInExplorerToolStripMenuItem.Text = "Open in explorer";
+            this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
+            // 
+            // reverseSearchToolStripMenuItem
+            // 
+            this.reverseSearchToolStripMenuItem.Name = "reverseSearchToolStripMenuItem";
+            this.reverseSearchToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.reverseSearchToolStripMenuItem.Text = "Reverse search";
+            this.reverseSearchToolStripMenuItem.Click += new System.EventHandler(this.reverseSearchToolStripMenuItem_Click);
             // 
             // menuStrip1
             // 
@@ -148,7 +182,8 @@
             this.imagesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.scanDirectoryToolStripMenuItem,
             this.resolveDuplicatesToolStripMenuItem,
-            this.sortToolStripMenuItem1});
+            this.sortToolStripMenuItem1,
+            this.recalculateHashesToolStripMenuItem});
             this.imagesToolStripMenuItem.Name = "imagesToolStripMenuItem";
             this.imagesToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
             this.imagesToolStripMenuItem.Text = "Images";
@@ -175,6 +210,13 @@
             this.sortToolStripMenuItem1.Text = "Sort";
             this.sortToolStripMenuItem1.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
             // 
+            // recalculateHashesToolStripMenuItem
+            // 
+            this.recalculateHashesToolStripMenuItem.Name = "recalculateHashesToolStripMenuItem";
+            this.recalculateHashesToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.recalculateHashesToolStripMenuItem.Text = "Recalculate hashes";
+            this.recalculateHashesToolStripMenuItem.Click += new System.EventHandler(this.recalculateHashesToolStripMenuItem_Click);
+            // 
             // progressDialog1
             // 
             this.progressDialog1.MinimizeBox = false;
@@ -197,38 +239,6 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.previewToolStripMenuItem,
-            this.openInExplorerToolStripMenuItem,
-            this.reverseSearchToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 92);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
-            // 
-            // previewToolStripMenuItem
-            // 
-            this.previewToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
-            this.previewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.previewToolStripMenuItem.Text = "Preview";
-            this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
-            // 
-            // openInExplorerToolStripMenuItem
-            // 
-            this.openInExplorerToolStripMenuItem.Name = "openInExplorerToolStripMenuItem";
-            this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.openInExplorerToolStripMenuItem.Text = "Open in explorer";
-            this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
-            // 
-            // reverseSearchToolStripMenuItem
-            // 
-            this.reverseSearchToolStripMenuItem.Name = "reverseSearchToolStripMenuItem";
-            this.reverseSearchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.reverseSearchToolStripMenuItem.Text = "Reverse search";
-            this.reverseSearchToolStripMenuItem.Click += new System.EventHandler(this.reverseSearchToolStripMenuItem_Click);
-            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -243,11 +253,11 @@
             this.Text = "ImgComparer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainView_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -275,5 +285,6 @@
         private System.Windows.Forms.ToolStripMenuItem previewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openInExplorerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reverseSearchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recalculateHashesToolStripMenuItem;
     }
 }

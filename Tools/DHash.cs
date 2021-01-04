@@ -8,7 +8,7 @@ namespace ImgComparer.Tools
         public static ulong Calculate(Bitmap image)
         {
             Bitmap grayscale = ToGrayscale(image);
-            Bitmap bmp = new Bitmap(grayscale, 9, 8);
+            Bitmap bmp = Resize(grayscale, 9, 8);
             grayscale.Dispose();
             ulong hash = 0;
             ulong bit = 1;
@@ -61,6 +61,17 @@ namespace ImgComparer.Tools
             //dispose the Graphics object
             g.Dispose();
             return newBitmap;
+        }
+
+        private static Bitmap Resize(Bitmap bmp, int width, int height)
+        {
+            Bitmap newBmp = new Bitmap(width, height);
+            using (Graphics g = Graphics.FromImage(newBmp))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(bmp, 0, 0, width, height);
+            }
+            return newBmp;
         }
 
         private static readonly int[] counts = new int[] { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };

@@ -21,14 +21,17 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.btLeft = new System.Windows.Forms.Button();
-            this.btBoth = new System.Windows.Forms.Button();
             this.btRight = new System.Windows.Forms.Button();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.btComplex = new System.Windows.Forms.Button();
+            this.btBoth = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -81,8 +84,8 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel2.Controls.Add(this.btLeft, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.btBoth, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.btRight, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 390);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -94,35 +97,67 @@
             // btLeft
             // 
             this.btLeft.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btLeft.Location = new System.Drawing.Point(3, 3);
+            this.btLeft.Location = new System.Drawing.Point(0, 0);
+            this.btLeft.Margin = new System.Windows.Forms.Padding(0);
             this.btLeft.Name = "btLeft";
-            this.btLeft.Size = new System.Drawing.Size(258, 31);
+            this.btLeft.Size = new System.Drawing.Size(264, 37);
             this.btLeft.TabIndex = 0;
             this.btLeft.Text = "Left better";
             this.btLeft.UseVisualStyleBackColor = true;
             this.btLeft.Click += new System.EventHandler(this.btLeft_Click);
             // 
-            // btBoth
-            // 
-            this.btBoth.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btBoth.Location = new System.Drawing.Point(267, 3);
-            this.btBoth.Name = "btBoth";
-            this.btBoth.Size = new System.Drawing.Size(258, 31);
-            this.btBoth.TabIndex = 1;
-            this.btBoth.Text = "Keep both";
-            this.btBoth.UseVisualStyleBackColor = true;
-            this.btBoth.Click += new System.EventHandler(this.btBoth_Click);
-            // 
             // btRight
             // 
             this.btRight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btRight.Location = new System.Drawing.Point(531, 3);
+            this.btRight.Location = new System.Drawing.Point(528, 0);
+            this.btRight.Margin = new System.Windows.Forms.Padding(0);
             this.btRight.Name = "btRight";
-            this.btRight.Size = new System.Drawing.Size(260, 31);
+            this.btRight.Size = new System.Drawing.Size(266, 37);
             this.btRight.TabIndex = 2;
             this.btRight.Text = "Right better";
             this.btRight.UseVisualStyleBackColor = true;
             this.btRight.Click += new System.EventHandler(this.btRight_Click);
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Controls.Add(this.btComplex, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.btBoth, 0, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(264, 0);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(264, 37);
+            this.tableLayoutPanel3.TabIndex = 3;
+            // 
+            // btComplex
+            // 
+            this.btComplex.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btComplex.Location = new System.Drawing.Point(0, 18);
+            this.btComplex.Margin = new System.Windows.Forms.Padding(0);
+            this.btComplex.Name = "btComplex";
+            this.btComplex.Size = new System.Drawing.Size(264, 19);
+            this.btComplex.TabIndex = 3;
+            this.btComplex.Text = "Multi compare";
+            this.btComplex.UseVisualStyleBackColor = true;
+            this.btComplex.Click += new System.EventHandler(this.btComplex_Click);
+            // 
+            // btBoth
+            // 
+            this.btBoth.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btBoth.Location = new System.Drawing.Point(0, 0);
+            this.btBoth.Margin = new System.Windows.Forms.Padding(0);
+            this.btBoth.Name = "btBoth";
+            this.btBoth.Size = new System.Drawing.Size(264, 18);
+            this.btBoth.TabIndex = 2;
+            this.btBoth.Text = "Keep both";
+            this.btBoth.UseVisualStyleBackColor = true;
+            this.btBoth.Click += new System.EventHandler(this.btBoth_Click);
             // 
             // textBox1
             // 
@@ -169,6 +204,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -180,10 +216,12 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Button btLeft;
-        private System.Windows.Forms.Button btBoth;
         private System.Windows.Forms.Button btRight;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Button btComplex;
+        private System.Windows.Forms.Button btBoth;
     }
 }
 

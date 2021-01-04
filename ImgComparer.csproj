@@ -45,6 +45,7 @@
     <Reference Include="Microsoft.Azure.Storage.Common, Version=11.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Azure.Storage.Common.11.2.2\lib\net452\Microsoft.Azure.Storage.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -68,6 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Db.cs" />
+    <Compile Include="Model\Action.cs" />
+    <Compile Include="Model\DuplicateItem.cs" />
     <Compile Include="UI\CompareView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +87,12 @@
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
     <Compile Include="OrderByAttribute.cs" />
+    <Compile Include="UI\MultiCompareView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MultiCompareView.Designer.cs">
+      <DependentUpon>MultiCompareView.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Preview.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +109,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\MultiCompareView.resx">
+      <DependentUpon>MultiCompareView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Preview.resx">
       <DependentUpon>Preview.cs</DependentUpon>
