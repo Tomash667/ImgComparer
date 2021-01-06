@@ -14,6 +14,8 @@ namespace ImgComparer.UI
         private SortableList<Image> images;
         private int imageCount;
         private bool changes;
+        private ImgComparer.Properties.Settings settings;
+        private List<string> recentProjects;
 
         public MainView()
         {
@@ -30,6 +32,39 @@ namespace ImgComparer.UI
                null,
                dataGridView1,
                new object[] { true });
+            settings = ImgComparer.Properties.Settings.Default;
+            autoOpenLastToolStripMenuItem.Checked = settings.AutoOpen;
+            recentProjects = settings.Recent.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            PopulateRecentProjects();
+            if (settings.AutoOpen && recentProjects.Count > 0)
+            {
+                db.Open(recentProjects[0]);
+                imagesToolStripMenuItem.Enabled = true;
+                saveToolStripMenuItem.Enabled = true;
+                UpdateStatus(changed: false, calculateScore: false);
+            }
+        }
+
+        private void PopulateRecentProjects()
+        {
+            var items = projectToolStripMenuItem.DropDownItems;
+            while (true)
+            {
+                var item = items[items.Count - 1];
+                if (item == toolStripSeparator1)
+                    break;
+                items.Remove(item);
+            }
+
+            int index = 0;
+            foreach (string recentProject in recentProjects)
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem($"{index + 1}: {recentProject}");
+                item.Name = $"recent{index}";
+                item.Click += OpenRecentProject_Click;
+                projectToolStripMenuItem.DropDownItems.Add(item);
+                ++index;
+            }
         }
 
         private void RefreshImages()
@@ -114,13 +149,18 @@ namespace ImgComparer.UI
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!ConfirmOpen())
+                return;
+
             DialogResult result = vistaFolderBrowserDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                db.Open(vistaFolderBrowserDialog1.SelectedPath);
+                string path = vistaFolderBrowserDialog1.SelectedPath;
+                db.Open(path);
                 imagesToolStripMenuItem.Enabled = true;
                 saveToolStripMenuItem.Enabled = true;
                 UpdateStatus(changed: false, calculateScore: false);
+                UpdateRecent(path);
             }
         }
 
@@ -135,6 +175,26 @@ namespace ImgComparer.UI
             toolStripStatusLabel1.Text = $"Sorted images:{db.sortedImages.Count}/{db.imagesDict.Count} Duplicates:{db.duplicates.Count}";
             sortToolStripMenuItem1.Enabled = (db.newImages.Count != 0);
             resolveDuplicatesToolStripMenuItem.Enabled = (db.duplicates.Count != 0);
+        }
+
+        private void UpdateRecent(string path)
+        {
+            if (recentProjects.Contains(path))
+            {
+                if (path == recentProjects[0])
+                    return;
+                recentProjects.Remove(path);
+                recentProjects.Insert(0, path);
+            }
+            else
+            {
+                recentProjects.Insert(0, path);
+                if (recentProjects.Count > 5)
+                    recentProjects.RemoveAt(5);
+            }
+            settings.Recent = string.Join(";", recentProjects);
+            settings.Save();
+            PopulateRecentProjects();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -289,6 +349,15 @@ namespace ImgComparer.UI
             }
         }
 
+        private bool ConfirmOpen()
+        {
+            if (!changes)
+                return true;
+
+            DialogResult result = MessageBox.Show(this, "Open project without saving?", "Open", MessageBoxButtons.YesNo);
+            return result == DialogResult.Yes;
+        }
+
         private void resolveDuplicatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             (int replaced, int removed) = ResolveDuplicates();
@@ -367,6 +436,28 @@ namespace ImgComparer.UI
             Enabled = true;
             ResolveDuplicates();
             UpdateStatus();
+        }
+
+        private void autoOpenLastToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            settings.AutoOpen = !settings.AutoOpen;
+            settings.Save();
+            autoOpenLastToolStripMenuItem.Checked = settings.AutoOpen;
+        }
+
+        private void OpenRecentProject_Click(object sender, EventArgs e)
+        {
+            if (!ConfirmOpen())
+                return;
+
+            var toolstrip = sender as ToolStripMenuItem;
+            int index = int.Parse(toolstrip.Name.Substring("recent".Length));
+            string path = recentProjects[index];
+            db.Open(path);
+            imagesToolStripMenuItem.Enabled = true;
+            saveToolStripMenuItem.Enabled = true;
+            UpdateStatus(changed: false, calculateScore: false);
+            UpdateRecent(path);
         }
     }
 }
