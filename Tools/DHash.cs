@@ -5,6 +5,8 @@ namespace ImgComparer.Tools
 {
     public static class DHash
     {
+        public const int Margin = 8;
+
         public static ulong Calculate(Bitmap image)
         {
             Bitmap grayscale = ToGrayscale(image);
@@ -91,6 +93,11 @@ namespace ImgComparer.Tools
                 shift += 4;
             }
             return res;
+        }
+
+        public static int ToSimilarity(int dist)
+        {
+            return 100 - dist * 100 / Margin;
         }
     }
 }

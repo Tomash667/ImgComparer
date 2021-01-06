@@ -1,6 +1,6 @@
 ﻿using ImgComparer.Model;
+using ImgComparer.Tools;
 using System;
-using System.IO;
 using System.Windows.Forms;
 
 namespace ImgComparer.UI
@@ -8,6 +8,7 @@ namespace ImgComparer.UI
     public partial class CompareView : Form
     {
         private System.Drawing.Font normalFont, boldFont;
+        private Image image1, image2;
 
         public enum Result
         {
@@ -53,6 +54,9 @@ namespace ImgComparer.UI
 
         public DialogResult Show(Image image1, Image image2, int? dist = null, bool complex = false)
         {
+            this.image1 = image1;
+            this.image2 = image2;
+
             pictureBox1.Image = System.Drawing.Image.FromFile(image1.path);
             pictureBox2.Image = System.Drawing.Image.FromFile(image2.path);
             DialogResult = DialogResult.None;
@@ -60,7 +64,7 @@ namespace ImgComparer.UI
             textBox2.Text = $"File:\u200B{image2.Filename} Size:\u200B{Utility.BytesToString(image2.size)} Resolution:\u200B{image2.Resolution}";
             if (dist.HasValue)
             {
-                btBoth.Text = $"Keep both\n({dist.Value} distance)";
+                btBoth.Text = $"Keep both\n({DHash.ToSimilarity(dist.Value)}% similarity)";
                 if (image2.size >= image1.size && image2.ResolutionValue >= image1.ResolutionValue)
                 {
                     btRight.Font = boldFont;
@@ -122,6 +126,13 @@ namespace ImgComparer.UI
         {
             if (e.KeyCode == Keys.Escape)
                 Close();
+        }
+
+        private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var pictureBox = ((ContextMenuStrip)(sender as ToolStripMenuItem).Owner).SourceControl;
+            Image image = (pictureBox == pictureBox1 ? image1 : image2);
+            Utility.OpenInExplorer(image.path);
         }
 
         private void CompareView_FormClosing(object sender, FormClosingEventArgs e)

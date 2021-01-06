@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace ImgComparer
@@ -8,6 +9,12 @@ namespace ImgComparer
     public static class Utility
     {
         private static Random rnd = new Random();
+
+        [DllImport("shell32.dll")]
+        private static extern int SHOpenFolderAndSelectItems(IntPtr pidlFolder, uint cidl, [MarshalAs(UnmanagedType.LPArray)] IntPtr[] apidl, uint dwFlags);
+
+        [DllImport("shell32.dll")]
+        private static extern void SHParseDisplayName([MarshalAs(UnmanagedType.LPWStr)] string name, IntPtr bindingContext, out IntPtr pidl, uint sfgaoIn, out uint psfgaoOut);
 
         public static int Rand => rnd.Next();
 
@@ -66,6 +73,28 @@ namespace ImgComparer
                         return;
                 }
             }
+        }
+
+        public static void OpenInExplorer(string path)
+        {
+            if (!File.Exists(path))
+                return;
+
+            string dir = Path.GetDirectoryName(path);
+            SHParseDisplayName(dir, IntPtr.Zero, out IntPtr folder, 0, out uint _);
+            if (folder == IntPtr.Zero)
+                return;
+
+            SHParseDisplayName(path, IntPtr.Zero, out IntPtr file, 0, out uint _);
+
+            if (file != IntPtr.Zero)
+            {
+                IntPtr[] files = { file };
+                SHOpenFolderAndSelectItems(folder, (uint)files.Length, files, 0);
+                Marshal.FreeCoTaskMem(file);
+            }
+
+            Marshal.FreeCoTaskMem(folder);
         }
     }
 }

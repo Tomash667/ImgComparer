@@ -161,7 +161,7 @@ namespace ImgComparer
                             image = null;
                             break;
                         }
-                        else if (dist < 8 && !duplicates.Any(x => x.image1 == image2 && x.image2 == image))
+                        else if (dist < DHash.Margin && !duplicates.Any(x => x.image1 == image2 && x.image2 == image))
                         {
                             duplicates.Add(new Duplicate
                             {
@@ -217,7 +217,7 @@ namespace ImgComparer
                     if (image != image2)
                     {
                         int dist = DHash.Distance(image.hash, image2.hash);
-                        if (dist < 8 && !duplicates.Any(x => x.image1 == image2 && x.image2 == image))
+                        if (dist < DHash.Margin && !duplicates.Any(x => x.image1 == image2 && x.image2 == image))
                         {
                             duplicates.Add(new Duplicate
                             {

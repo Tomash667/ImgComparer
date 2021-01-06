@@ -404,7 +404,7 @@ namespace ImgComparer.UI
         {
             int index = dataGridView1.CurrentRow.Index;
             Image image = images[index];
-            System.Diagnostics.Process.Start("explorer.exe", $"/select, \"{image.path}\"");
+            Utility.OpenInExplorer(image.path);
         }
 
         private void reverseSearchToolStripMenuItem_Click(object sender, EventArgs e)
