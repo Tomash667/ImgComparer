@@ -43,6 +43,8 @@
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoOpenLastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.imagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scanDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resolveDuplicatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,8 +54,7 @@
             this.progressDialog1 = new Ookii.Dialogs.WinForms.ProgressDialog(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.autoOpenLastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.resetScoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -116,9 +117,10 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.previewToolStripMenuItem,
             this.openInExplorerToolStripMenuItem,
-            this.reverseSearchToolStripMenuItem});
+            this.reverseSearchToolStripMenuItem,
+            this.resetScoreToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 92);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // previewToolStripMenuItem
@@ -169,7 +171,7 @@
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -177,9 +179,21 @@
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // autoOpenLastToolStripMenuItem
+            // 
+            this.autoOpenLastToolStripMenuItem.Name = "autoOpenLastToolStripMenuItem";
+            this.autoOpenLastToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.autoOpenLastToolStripMenuItem.Text = "Auto open last";
+            this.autoOpenLastToolStripMenuItem.Click += new System.EventHandler(this.autoOpenLastToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
             // 
             // imagesToolStripMenuItem
             // 
@@ -243,17 +257,12 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // autoOpenLastToolStripMenuItem
+            // resetScoreToolStripMenuItem
             // 
-            this.autoOpenLastToolStripMenuItem.Name = "autoOpenLastToolStripMenuItem";
-            this.autoOpenLastToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.autoOpenLastToolStripMenuItem.Text = "Auto open last";
-            this.autoOpenLastToolStripMenuItem.Click += new System.EventHandler(this.autoOpenLastToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.resetScoreToolStripMenuItem.Name = "resetScoreToolStripMenuItem";
+            this.resetScoreToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.resetScoreToolStripMenuItem.Text = "Reset score";
+            this.resetScoreToolStripMenuItem.Click += new System.EventHandler(this.resetScoreToolStripMenuItem_Click);
             // 
             // MainView
             // 
@@ -268,6 +277,7 @@
             this.Name = "MainView";
             this.Text = "ImgComparer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainView_FormClosing);
+            this.Load += new System.EventHandler(this.MainView_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
@@ -304,5 +314,6 @@
         private System.Windows.Forms.ToolStripMenuItem recalculateHashesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem autoOpenLastToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem resetScoreToolStripMenuItem;
     }
 }

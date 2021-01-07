@@ -14,7 +14,7 @@ namespace ImgComparer.UI
         private SortableList<Image> images;
         private int imageCount;
         private bool changes;
-        private ImgComparer.Properties.Settings settings;
+        private Properties.Settings settings;
         private List<string> recentProjects;
 
         public MainView()
@@ -32,10 +32,15 @@ namespace ImgComparer.UI
                null,
                dataGridView1,
                new object[] { true });
-            settings = ImgComparer.Properties.Settings.Default;
+            settings = Properties.Settings.Default;
             autoOpenLastToolStripMenuItem.Checked = settings.AutoOpen;
             recentProjects = settings.Recent.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             PopulateRecentProjects();
+        }
+
+
+        private void MainView_Load(object sender, EventArgs e)
+        {
             if (settings.AutoOpen && recentProjects.Count > 0)
             {
                 db.Open(recentProjects[0]);
@@ -69,8 +74,23 @@ namespace ImgComparer.UI
 
         private void RefreshImages()
         {
+            Image selected = null;
+            if (dataGridView1.SelectedRows.Count == 1)
+            {
+                int index = dataGridView1.SelectedRows[0].Index;
+                selected = images[index];
+            }
+            var column = dataGridView1.SortedColumn;
+            var order = dataGridView1.SortOrder;
             images = new SortableList<Image>(db.imagesDict.Values);
             dataGridView1.DataSource = images;
+            dataGridView1.Sort(column ?? dataGridView1.Columns[0], order == SortOrder.Descending ? ListSortDirection.Descending : ListSortDirection.Ascending);
+            if (selected != null)
+            {
+                int index = images.IndexOf(selected);
+                if (index != -1)
+                    dataGridView1.Rows[index].Selected = true;
+            }
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -398,6 +418,12 @@ namespace ImgComparer.UI
             var hit = dataGridView1.HitTest(point.X, point.Y);
             if (hit.Type != DataGridViewHitTestType.Cell && hit.Type != DataGridViewHitTestType.RowHeader)
                 e.Cancel = true;
+            else
+            {
+                int index = dataGridView1.CurrentRow.Index;
+                Image image = images[index];
+                resetScoreToolStripMenuItem.Enabled = image.score > 0;
+            }
         }
 
         private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -458,6 +484,19 @@ namespace ImgComparer.UI
             saveToolStripMenuItem.Enabled = true;
             UpdateStatus(changed: false, calculateScore: false);
             UpdateRecent(path);
+        }
+
+        private void resetScoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = dataGridView1.CurrentRow.Index;
+            Image image = images[index];
+            if (MessageBox.Show(this, "Are you sure?", "Reset score", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                image.score = 0;
+                db.newImages.Add(image);
+                db.sortedImages.Remove(image);
+                UpdateStatus();
+            }
         }
     }
 }
