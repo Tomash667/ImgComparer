@@ -113,7 +113,7 @@ namespace ImgComparer.UI
                 return;
             }
 
-            CompareView compare = new CompareView(false);
+            CompareView compare = new CompareView(db, false);
             Enabled = false;
             compare.Owner = this;
             bool anythingDone = false, cancel = false;
@@ -123,6 +123,7 @@ namespace ImgComparer.UI
                 Image image = db.newImages[index];
                 if (db.sortedImages.Count == 0)
                 {
+                    image.score = 1;
                     db.sortedImages.Add(image);
                     db.newImages.RemoveAt(index);
                     anythingDone = true;
@@ -139,6 +140,7 @@ namespace ImgComparer.UI
                     {
                         if (L == R || L == mid)
                         {
+                            image.score = 1;
                             db.sortedImages.Insert(compare.CompareResult == CompareView.Result.Right ? L : L + 1, image);
                             db.newImages.RemoveAt(index);
                             anythingDone = true;
@@ -272,7 +274,7 @@ namespace ImgComparer.UI
                 return (0, 0);
 
             int replaced = 0, removed = 0;
-            CompareView compare = new CompareView(true);
+            CompareView compare = new CompareView(db, true);
             compare.Owner = this;
             Enabled = false;
 

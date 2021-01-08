@@ -13,7 +13,7 @@ namespace ImgComparer.Model
         // not saved (calculated or temporary)
         public string path;
         [OrderBy(nameof(ScoreValue))]
-        public string Score => $"{score:0.##}";
+        public string Score => score.ToString("0.##");
         [OrderBy(nameof(SizeValue))]
         public string SizeText => Utility.BytesToString(size);
         [OrderBy(nameof(ResolutionValue))]

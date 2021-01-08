@@ -7,6 +7,7 @@ namespace ImgComparer.UI
 {
     public partial class CompareView : Form
     {
+        private Db db;
         private System.Drawing.Font normalFont, boldFont;
         private Image image1, image2;
 
@@ -20,8 +21,10 @@ namespace ImgComparer.UI
 
         public Result CompareResult { get; private set; }
 
-        public CompareView(bool conflict)
+        public CompareView(Db db, bool conflict)
         {
+            this.db = db;
+
             InitializeComponent();
 
             if (conflict)
@@ -61,7 +64,11 @@ namespace ImgComparer.UI
             pictureBox2.Image = System.Drawing.Image.FromFile(image2.path);
             DialogResult = DialogResult.None;
             textBox1.Text = $"File:​\u200B{image1.Filename} Size:\u200B{Utility.BytesToString(image1.size)} Resolution:\u200B{image1.Resolution}";
+            if (image1.score > 0)
+                textBox2.Text += $" Score:\u200B{db.GetScore(image1)}";
             textBox2.Text = $"File:\u200B{image2.Filename} Size:\u200B{Utility.BytesToString(image2.size)} Resolution:\u200B{image2.Resolution}";
+            if (image2.score > 0)
+                textBox2.Text += $" Score:\u200B{db.GetScore(image2)}";
             if (dist.HasValue)
             {
                 btBoth.Text = $"Keep both\n({DHash.ToSimilarity(dist.Value)}% similarity)";

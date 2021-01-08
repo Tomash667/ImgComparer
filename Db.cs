@@ -154,7 +154,7 @@ namespace ImgComparer
                     foreach (Image image2 in imagesDict.Select(x => x.Value).Where(x => x.found))
                     {
                         int dist = DHash.Distance(image.hash, image2.hash);
-                        if(dist == 0 && image.size == image2.size && image.ResolutionValue == image2.ResolutionValue)
+                        if (dist == 0 && image.size == image2.size && image.ResolutionValue == image2.ResolutionValue)
                         {
                             // exact duplicate, autodelete
                             exactDuplicates.Add(image.path);
@@ -198,11 +198,19 @@ namespace ImgComparer
             }
         }
 
+        public string GetScore(Image image)
+        {
+            int index = sortedImages.IndexOf(image);
+            decimal mod = 99.0M / (sortedImages.Count - 1);
+            decimal score = 1 + mod * index;
+            return score.ToString("0.##");
+        }
+
         public void RecalculateHashes(Action<int> progress)
         {
             int count = imagesDict.Count * 2;
             int index = 0;
-            foreach(Image image in imagesDict.Select(x => x.Value))
+            foreach (Image image in imagesDict.Select(x => x.Value))
             {
                 System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(image.path);
                 image.hash = DHash.Calculate(bmp);
@@ -212,7 +220,7 @@ namespace ImgComparer
             }
             foreach (Image image in imagesDict.Select(x => x.Value))
             {
-                foreach(Image image2 in imagesDict.Select(x => x.Value))
+                foreach (Image image2 in imagesDict.Select(x => x.Value))
                 {
                     if (image != image2)
                     {
