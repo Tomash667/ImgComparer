@@ -1,4 +1,5 @@
 ﻿using ImgComparer.Model;
+using ImgComparer.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -183,6 +184,7 @@ namespace ImgComparer.UI
                 saveToolStripMenuItem.Enabled = true;
                 UpdateStatus(changed: false, calculateScore: false);
                 UpdateRecent(path);
+                tFilter.Clear();
             }
         }
 
@@ -486,6 +488,7 @@ namespace ImgComparer.UI
             saveToolStripMenuItem.Enabled = true;
             UpdateStatus(changed: false, calculateScore: false);
             UpdateRecent(path);
+            tFilter.Clear();
         }
 
         private void resetScoreToolStripMenuItem_Click(object sender, EventArgs e)
@@ -498,6 +501,56 @@ namespace ImgComparer.UI
                 db.newImages.Add(image);
                 db.sortedImages.Remove(image);
                 UpdateStatus();
+            }
+        }
+
+        private void tFilter_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                btApply_Click(sender, new EventArgs());
+            }
+        }
+
+        private void btApply_Click(object sender, EventArgs e)
+        {
+            var column = dataGridView1.SortedColumn;
+            SortOrder order = dataGridView1.SortOrder;
+            StringFilter filter = new StringFilter(tFilter.Text);
+            if (filter.Required)
+                images.ApplyFilter(image => filter.Filter(image.Filename));
+            else
+            {
+                tFilter.Clear();
+                images.ClearFilter();
+            }
+            dataGridView1.Sort(column, order == SortOrder.Descending ? ListSortDirection.Descending : ListSortDirection.Ascending);
+        }
+
+        private void btClear_Click(object sender, EventArgs e)
+        {
+            var column = dataGridView1.SortedColumn;
+            SortOrder order = dataGridView1.SortOrder;
+            tFilter.Clear();
+            images.ClearFilter();
+            dataGridView1.Sort(column, order == SortOrder.Descending ? ListSortDirection.Descending : ListSortDirection.Ascending);
+        }
+
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = dataGridView1.CurrentRow.Index;
+            Image image = images[index];
+            if (MessageBox.Show(this, "Are you sure?", "Remove", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                if (image.score == 0)
+                    db.newImages.Remove(image);
+                else
+                    db.sortedImages.Remove(image);
+                db.imagesDict.Remove(image.Filename);
+                Utility.SafeDelete(this, image.path);
+                UpdateStatus(calculateScore: image.score != 0);
             }
         }
     }

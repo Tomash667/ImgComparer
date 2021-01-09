@@ -9,42 +9,38 @@ namespace ImgComparer
     public class SortableList<T> : BindingList<T>
     {
         // reference to the list provided at the time of instantiation
-        List<T> originalList;
-        ListSortDirection sortDirection;
-        PropertyDescriptor sortProperty;
+        private List<T> originalList, filteredList;
+        private ListSortDirection sortDirection;
+        private PropertyDescriptor sortProperty;
+        private bool filtered;
+        private Func<List<T>, IEnumerable<T>> sortFunc;
 
         // a cache of functions that perform the sorting
         // for a given type, property, and sort direction
-        static Dictionary<string, Func<List<T>, IEnumerable<T>>>
-           cachedOrderByExpressions = new Dictionary<string, Func<List<T>,
-                                                     IEnumerable<T>>>();
+        private static Dictionary<string, Func<List<T>, IEnumerable<T>>> cachedOrderByExpressions =
+            new Dictionary<string, Func<List<T>, IEnumerable<T>>>();
 
-        public SortableList()
-        {
-            originalList = new List<T>();
-        }
+        protected override bool SupportsSortingCore => true;
+        protected override ListSortDirection SortDirectionCore => sortDirection;
+        protected override PropertyDescriptor SortPropertyCore => sortProperty;
 
         public SortableList(IEnumerable<T> enumerable)
         {
             originalList = enumerable.ToList();
-            ResetItems(originalList);
+            filteredList = originalList;
+            ResetItems(filteredList);
         }
 
-        public SortableList(List<T> list)
+        /// <summary>
+        /// Look for an appropriate sort method in the cache if not found .
+        /// Call CreateOrderByMethod to create one.
+        /// Apply it to the original list.
+        /// Notify any bound controls that the sort has been applied.
+        /// </summary>
+        protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
         {
-            originalList = list;
-            ResetItems(originalList);
-        }
-
-        protected override void ApplySortCore(PropertyDescriptor prop,
-                                ListSortDirection direction)
-        {
-            /*
-             Look for an appropriate sort method in the cache if not found .
-             Call CreateOrderByMethod to create one. 
-             Apply it to the original list.
-             Notify any bound controls that the sort has been applied.
-             */
+            if (sortProperty == prop && sortDirection == direction)
+                return;
 
             sortProperty = prop;
             sortDirection = direction;
@@ -54,21 +50,19 @@ namespace ImgComparer
             var cacheKey = typeof(T).GUID + prop.Name + orderByMethodName;
 
             if (!cachedOrderByExpressions.ContainsKey(cacheKey))
-            {
                 CreateOrderByMethod(prop, orderByMethodName, cacheKey);
-            }
 
-            ResetItems(cachedOrderByExpressions[cacheKey](originalList).ToList());
+            sortFunc = cachedOrderByExpressions[cacheKey];
+            ResetItems(sortFunc(filteredList));
             ResetBindings();
         }
 
+        /// <summary>
+        /// Create a generic method implementation for IEnumerable<T>.
+        /// Cache it.
+        /// </summary>
         private void CreateOrderByMethod(PropertyDescriptor prop, string orderByMethodName, string cacheKey)
         {
-            /*
-             Create a generic method implementation for IEnumerable<T>.
-             Cache it.
-            */
-
             Type t = typeof(T);
             var sourceParameter = Expression.Parameter(typeof(List<T>), "source");
             var lambdaParameter = Expression.Parameter(t, "lambdaParameter");
@@ -95,49 +89,52 @@ namespace ImgComparer
             cachedOrderByExpressions.Add(cacheKey, orderByExpression.Compile());
         }
 
-        protected override void RemoveSortCore()
-        {
-            ResetItems(originalList);
-        }
-
-        private void ResetItems(List<T> items)
-        {
-            base.ClearItems();
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                base.InsertItem(i, items[i]);
-            }
-        }
-
-        protected override bool SupportsSortingCore
-        {
-            get
-            {
-                // indeed we do
-                return true;
-            }
-        }
-
-        protected override ListSortDirection SortDirectionCore
-        {
-            get
-            {
-                return sortDirection;
-            }
-        }
-
-        protected override PropertyDescriptor SortPropertyCore
-        {
-            get
-            {
-                return sortProperty;
-            }
-        }
-
         protected override void OnListChanged(ListChangedEventArgs e)
         {
-            originalList = base.Items.ToList();
+        }
+
+        protected override void RemoveSortCore()
+        {
+            ResetItems(filteredList);
+        }
+
+        private void ResetItems(IEnumerable<T> items)
+        {
+            ClearItems();
+            foreach (T item in items)
+                Add(item);
+        }
+
+        private IEnumerable<T> ApplySort(List<T> items)
+        {
+            if (sortFunc != null)
+                return sortFunc(items);
+            else
+                return items;
+        }
+
+        public void ApplyFilter(Func<T, bool> pred)
+        {
+            filtered = true;
+            filteredList = new List<T>();
+            foreach (T item in originalList)
+            {
+                if (pred(item))
+                    filteredList.Add(item);
+            }
+            ResetItems(ApplySort(filteredList));
+            base.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        }
+
+        public void ClearFilter()
+        {
+            if (filtered)
+            {
+                filtered = false;
+                filteredList = originalList;
+                ResetItems(ApplySort(filteredList));
+                base.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            }
         }
     }
 }

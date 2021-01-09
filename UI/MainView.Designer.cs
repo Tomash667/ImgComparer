@@ -39,6 +39,7 @@
             this.previewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reverseSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetScoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,17 +55,25 @@
             this.progressDialog1 = new Ookii.Dialogs.WinForms.ProgressDialog(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.resetScoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.tFilter = new System.Windows.Forms.TextBox();
+            this.btApply = new System.Windows.Forms.Button();
+            this.btClear = new System.Windows.Forms.Button();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Filename,
@@ -73,12 +82,13 @@
             this.Resolution});
             this.dataGridView1.ContextMenuStrip = this.contextMenuStrip1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 24);
+            this.dataGridView1.Location = new System.Drawing.Point(0, 20);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(0);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(800, 404);
+            this.dataGridView1.Size = new System.Drawing.Size(800, 384);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             this.dataGridView1.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDown);
@@ -118,32 +128,40 @@
             this.previewToolStripMenuItem,
             this.openInExplorerToolStripMenuItem,
             this.reverseSearchToolStripMenuItem,
-            this.resetScoreToolStripMenuItem});
+            this.resetScoreToolStripMenuItem,
+            this.removeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 136);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // previewToolStripMenuItem
             // 
             this.previewToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
-            this.previewToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.previewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.previewToolStripMenuItem.Text = "Preview";
             this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
             // 
             // openInExplorerToolStripMenuItem
             // 
             this.openInExplorerToolStripMenuItem.Name = "openInExplorerToolStripMenuItem";
-            this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openInExplorerToolStripMenuItem.Text = "Open in explorer";
             this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
             // 
             // reverseSearchToolStripMenuItem
             // 
             this.reverseSearchToolStripMenuItem.Name = "reverseSearchToolStripMenuItem";
-            this.reverseSearchToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.reverseSearchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.reverseSearchToolStripMenuItem.Text = "Reverse search";
             this.reverseSearchToolStripMenuItem.Click += new System.EventHandler(this.reverseSearchToolStripMenuItem_Click);
+            // 
+            // resetScoreToolStripMenuItem
+            // 
+            this.resetScoreToolStripMenuItem.Name = "resetScoreToolStripMenuItem";
+            this.resetScoreToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetScoreToolStripMenuItem.Text = "Reset score";
+            this.resetScoreToolStripMenuItem.Click += new System.EventHandler(this.resetScoreToolStripMenuItem_Click);
             // 
             // menuStrip1
             // 
@@ -257,19 +275,79 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // resetScoreToolStripMenuItem
+            // tableLayoutPanel1
             // 
-            this.resetScoreToolStripMenuItem.Name = "resetScoreToolStripMenuItem";
-            this.resetScoreToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.resetScoreToolStripMenuItem.Text = "Reset score";
-            this.resetScoreToolStripMenuItem.Click += new System.EventHandler(this.resetScoreToolStripMenuItem_Click);
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Controls.Add(this.dataGridView1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 24);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 404);
+            this.tableLayoutPanel1.TabIndex = 3;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.tFilter);
+            this.panel1.Controls.Add(this.btApply);
+            this.panel1.Controls.Add(this.btClear);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(800, 20);
+            this.panel1.TabIndex = 1;
+            // 
+            // tFilter
+            // 
+            this.tFilter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tFilter.Location = new System.Drawing.Point(0, 0);
+            this.tFilter.Multiline = true;
+            this.tFilter.Name = "tFilter";
+            this.tFilter.Size = new System.Drawing.Size(650, 20);
+            this.tFilter.TabIndex = 0;
+            this.tFilter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tFilter_KeyDown);
+            // 
+            // btApply
+            // 
+            this.btApply.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btApply.Location = new System.Drawing.Point(650, 0);
+            this.btApply.Name = "btApply";
+            this.btApply.Size = new System.Drawing.Size(75, 20);
+            this.btApply.TabIndex = 1;
+            this.btApply.Text = "Apply";
+            this.btApply.UseVisualStyleBackColor = true;
+            this.btApply.Click += new System.EventHandler(this.btApply_Click);
+            // 
+            // btClear
+            // 
+            this.btClear.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btClear.Location = new System.Drawing.Point(725, 0);
+            this.btClear.Name = "btClear";
+            this.btClear.Size = new System.Drawing.Size(75, 20);
+            this.btClear.TabIndex = 2;
+            this.btClear.Text = "Clear";
+            this.btClear.UseVisualStyleBackColor = true;
+            this.btClear.Click += new System.EventHandler(this.btClear_Click);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeToolStripMenuItem.Text = "Remove";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -284,6 +362,9 @@
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -315,5 +396,11 @@
         private System.Windows.Forms.ToolStripMenuItem autoOpenLastToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem resetScoreToolStripMenuItem;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TextBox tFilter;
+        private System.Windows.Forms.Button btApply;
+        private System.Windows.Forms.Button btClear;
+        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
     }
 }

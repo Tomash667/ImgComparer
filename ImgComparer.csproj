@@ -76,6 +76,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Tools\StringFilter.cs" />
     <Compile Include="UI\CompareView.cs">
       <SubType>Form</SubType>
     </Compile>
