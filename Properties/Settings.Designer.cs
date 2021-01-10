@@ -46,5 +46,17 @@ namespace ImgComparer.Properties {
                 this["AutoOpen"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ImageBlob {
+            get {
+                return ((string)(this["ImageBlob"]));
+            }
+            set {
+                this["ImageBlob"] = value;
+            }
+        }
     }
 }

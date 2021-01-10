@@ -34,7 +34,6 @@ namespace ImgComparer.UI
                dataGridView1,
                new object[] { true });
             settings = Properties.Settings.Default;
-            autoOpenLastToolStripMenuItem.Checked = settings.AutoOpen;
             recentProjects = settings.Recent.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             PopulateRecentProjects();
         }
@@ -443,9 +442,14 @@ namespace ImgComparer.UI
         {
             int index = dataGridView1.CurrentRow.Index;
             Image image = images[index];
-            string[] urls = Tools.ReverseImageSearch.GetSearchUrl(image);
-            foreach (string url in urls)
-                System.Diagnostics.Process.Start(url);
+            string[] urls = ReverseImageSearch.GetSearchUrl(image);
+            if (urls == null)
+                MessageBox.Show(this, "Reverse image search require image blob connection string set in options.");
+            else
+            {
+                foreach (string url in urls)
+                    System.Diagnostics.Process.Start(url);
+            }
         }
 
         private void recalculateHashesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -468,13 +472,6 @@ namespace ImgComparer.UI
             Enabled = true;
             ResolveDuplicates();
             UpdateStatus();
-        }
-
-        private void autoOpenLastToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            settings.AutoOpen = !settings.AutoOpen;
-            settings.Save();
-            autoOpenLastToolStripMenuItem.Checked = settings.AutoOpen;
         }
 
         private void OpenRecentProject_Click(object sender, EventArgs e)
@@ -557,6 +554,12 @@ namespace ImgComparer.UI
                 Utility.SafeDelete(this, image.path);
                 UpdateStatus(calculateScore: image.score != 0);
             }
+        }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OptionsView options = new OptionsView();
+            options.ShowDialog(this);
         }
     }
 }

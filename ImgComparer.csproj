@@ -100,6 +100,12 @@
     <Compile Include="UI\MultiCompareView.Designer.cs">
       <DependentUpon>MultiCompareView.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\OptionsView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\OptionsView.Designer.cs">
+      <DependentUpon>OptionsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Preview.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +125,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\MultiCompareView.resx">
       <DependentUpon>MultiCompareView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\OptionsView.resx">
+      <DependentUpon>OptionsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Preview.resx">
       <DependentUpon>Preview.cs</DependentUpon>
