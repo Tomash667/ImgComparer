@@ -55,7 +55,7 @@ namespace ImgComparer.UI
             base.Dispose(disposing);
         }
 
-        public DialogResult Show(Image image1, Image image2, int? dist = null, bool complex = false)
+        public DialogResult Show(Image image1, Image image2, int? dist = null, int? complex = null)
         {
             this.image1 = image1;
             this.image2 = image2;
@@ -63,21 +63,21 @@ namespace ImgComparer.UI
             pictureBox1.Image = System.Drawing.Image.FromFile(image1.path);
             pictureBox2.Image = System.Drawing.Image.FromFile(image2.path);
             DialogResult = DialogResult.None;
-            textBox1.Text = $"File:​\u200B{image1.Filename} Size:\u200B{Utility.BytesToString(image1.size)} Resolution:\u200B{image1.Resolution}";
+            textBox1.Text = $"File:​\u200B{image1.Filename.TrimExt(100)} Size:\u200B{Utility.BytesToString(image1.size)} Resolution:\u200B{image1.Resolution}";
             if (image1.score > 0)
                 textBox2.Text += $" Score:\u200B{db.GetScore(image1)}";
-            textBox2.Text = $"File:\u200B{image2.Filename} Size:\u200B{Utility.BytesToString(image2.size)} Resolution:\u200B{image2.Resolution}";
+            textBox2.Text = $"File:\u200B{image2.Filename.TrimExt(100)} Size:\u200B{Utility.BytesToString(image2.size)} Resolution:\u200B{image2.Resolution}";
             if (image2.score > 0)
                 textBox2.Text += $" Score:\u200B{db.GetScore(image2)}";
             if (dist.HasValue)
             {
                 btBoth.Text = $"Keep both\n({DHash.ToSimilarity(dist.Value)}% similarity)";
-                if (image2.size >= image1.size && image2.ResolutionValue >= image1.ResolutionValue)
+                if (image2.size >= image1.size && image2.ResolutionValue >= image1.ResolutionValue && complex == null)
                 {
                     btRight.Font = boldFont;
                     btLeft.Font = normalFont;
                 }
-                else if (image1.size >= image2.size && image1.ResolutionValue >= image2.ResolutionValue)
+                else if (image1.size >= image2.size && image1.ResolutionValue >= image2.ResolutionValue && complex == null)
                 {
                     btLeft.Font = boldFont;
                     btRight.Font = normalFont;
@@ -87,7 +87,19 @@ namespace ImgComparer.UI
                     btLeft.Font = normalFont;
                     btRight.Font = normalFont;
                 }
-                btComplex.Enabled = complex;
+
+                if (complex.HasValue)
+                {
+                    btComplex.Enabled = true;
+                    btComplex.Text = $"Multi compare ({complex.Value})";
+                    btComplex.Font = boldFont;
+                }
+                else
+                {
+                    btComplex.Enabled = false;
+                    btComplex.Text = "Multi compare";
+                    btComplex.Font = normalFont;
+                }
             }
 
             Show();

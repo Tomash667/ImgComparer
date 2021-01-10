@@ -188,7 +188,11 @@ namespace ImgComparer
         public void CalculateScore()
         {
             if (sortedImages.Count <= 1)
+            {
+                if (sortedImages.Count == 1)
+                    sortedImages[0].score = 100;
                 return;
+            }
             decimal mod = 99.0M / (sortedImages.Count - 1);
             decimal sum = 1;
             foreach (Image image in sortedImages)
@@ -200,9 +204,15 @@ namespace ImgComparer
 
         public string GetScore(Image image)
         {
-            int index = sortedImages.IndexOf(image);
-            decimal mod = 99.0M / (sortedImages.Count - 1);
-            decimal score = 1 + mod * index;
+            decimal score;
+            if (sortedImages.Count == 1)
+                score = 100;
+            else
+            {
+                int index = sortedImages.IndexOf(image);
+                decimal mod = 99.0M / (sortedImages.Count - 1);
+                score = 1 + mod * index;
+            }
             return score.ToString("0.##");
         }
 

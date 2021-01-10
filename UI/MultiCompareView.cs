@@ -1,4 +1,5 @@
 ﻿using ImgComparer.Model;
+using ImgComparer.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +12,9 @@ namespace ImgComparer.UI
     {
         private Db db;
         private List<DuplicateItem> items;
+        private BindingList<DuplicateItem> bindingList;
         public int replaced, removed;
+        private bool inInit;
 
         public MultiCompareView(Db db, List<DuplicateItem> items)
         {
@@ -19,9 +22,22 @@ namespace ImgComparer.UI
             this.items = items;
 
             InitializeComponent();
-            dataGridView1.AutoGenerateColumns = false;
-            dataGridView1.DataSource = new BindingList<DuplicateItem>(items);
-            dataGridView1.Rows[0].Selected = true;
+
+            bindingList = new BindingList<DuplicateItem>(items);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                pictureBox1.Image?.Dispose();
+                components?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        private void MultiCompareView_Load(object sender, EventArgs e)
+        {
             List<Model.Action> actions = new List<Model.Action>
             {
                 new Model.Action{ Text = "Keep", Value = "keep" },
@@ -36,16 +52,14 @@ namespace ImgComparer.UI
             column.DisplayMember = "Text";
             column.ValueMember = "Value";
             column.DataSource = actions;
-        }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                pictureBox1.Image?.Dispose();
-                components?.Dispose();
-            }
-            base.Dispose(disposing);
+            inInit = true;
+            dataGridView1.AutoGenerateColumns = false;
+            //dataGridView1.SuspendLayout();
+            dataGridView1.DataSource = bindingList;
+            //dataGridView1.ResumeLayout();
+            //dataGridView1.Rows[0].Selected = true;
+            inInit = false;
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -53,13 +67,30 @@ namespace ImgComparer.UI
             if (dataGridView1.SelectedRows.Count == 0)
                 return;
 
-            int index = dataGridView1.SelectedRows[0].Index;
-            Image image = items[index].image;
+            int index = dataGridView1.SelectedRows[0].Index, pos = 0;
+            DuplicateItem item = items[index];
+            foreach (DuplicateItem item2 in items)
+            {
+                if (item == item2)
+                    item2.Similarity = "---";
+                else
+                {
+                    int dist = DHash.Distance(item.image.hash, item2.image.hash);
+                    item2.Similarity = $"{DHash.ToSimilarity(dist)}%";
+                }
+
+                if (!inInit)
+                {
+                    bindingList.ResetItem(pos);
+                    ++pos;
+                }
+            }
+
             if (pictureBox1.Image != null)
                 pictureBox1.Image.Dispose();
             try
             {
-                pictureBox1.Image = System.Drawing.Image.FromFile(image.path);
+                pictureBox1.Image = System.Drawing.Image.FromFile(item.image.path);
             }
             catch (Exception)
             {

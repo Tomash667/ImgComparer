@@ -40,6 +40,7 @@
             this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reverseSearchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetScoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +61,6 @@
             this.tFilter = new System.Windows.Forms.TextBox();
             this.btApply = new System.Windows.Forms.Button();
             this.btClear = new System.Windows.Forms.Button();
-            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -131,37 +131,45 @@
             this.resetScoreToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 136);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 114);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // previewToolStripMenuItem
             // 
             this.previewToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
-            this.previewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.previewToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.previewToolStripMenuItem.Text = "Preview";
             this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
             // 
             // openInExplorerToolStripMenuItem
             // 
             this.openInExplorerToolStripMenuItem.Name = "openInExplorerToolStripMenuItem";
-            this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.openInExplorerToolStripMenuItem.Text = "Open in explorer";
             this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
             // 
             // reverseSearchToolStripMenuItem
             // 
             this.reverseSearchToolStripMenuItem.Name = "reverseSearchToolStripMenuItem";
-            this.reverseSearchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reverseSearchToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.reverseSearchToolStripMenuItem.Text = "Reverse search";
             this.reverseSearchToolStripMenuItem.Click += new System.EventHandler(this.reverseSearchToolStripMenuItem_Click);
             // 
             // resetScoreToolStripMenuItem
             // 
             this.resetScoreToolStripMenuItem.Name = "resetScoreToolStripMenuItem";
-            this.resetScoreToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetScoreToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.resetScoreToolStripMenuItem.Text = "Reset score";
             this.resetScoreToolStripMenuItem.Click += new System.EventHandler(this.resetScoreToolStripMenuItem_Click);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.removeToolStripMenuItem.Text = "Remove";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // menuStrip1
             // 
@@ -334,13 +342,6 @@
             this.btClear.Text = "Clear";
             this.btClear.UseVisualStyleBackColor = true;
             this.btClear.Click += new System.EventHandler(this.btClear_Click);
-            // 
-            // removeToolStripMenuItem
-            // 
-            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.removeToolStripMenuItem.Text = "Remove";
-            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // MainView
             // 

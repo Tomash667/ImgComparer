@@ -284,7 +284,9 @@ namespace ImgComparer.UI
             while (db.duplicates.Count > 0 && !cancel)
             {
                 Duplicate duplicate = db.duplicates[0];
-                bool complex = db.duplicates.Any(x => x != duplicate && x.IsSameImage(duplicate));
+                int? complex = null;
+                if (db.duplicates.Any(x => x != duplicate && x.IsSameImage(duplicate)))
+                    complex = db.duplicates.Count(x => x != duplicate && x.IsSameImage(duplicate));
                 DialogResult result = compare.Show(duplicate.image1, duplicate.image2, duplicate.dist, complex);
                 if (result != DialogResult.OK)
                     break;
@@ -540,6 +542,9 @@ namespace ImgComparer.UI
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (dataGridView1.CurrentRow == null)
+                return;
+
             int index = dataGridView1.CurrentRow.Index;
             Image image = images[index];
             if (MessageBox.Show(this, "Are you sure?", "Remove", MessageBoxButtons.YesNo) == DialogResult.Yes)

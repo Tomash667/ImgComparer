@@ -14,5 +14,6 @@
             get { return action; }
             set { action = value; }
         }
+        public string Similarity { get; set; }
     }
 }

@@ -49,7 +49,8 @@ namespace ImgComparer.UI
                 if (Application.OpenForms.OfType<Preview>().Count() == 1)
                     Close();
             }
-            textBox1.Text = $"File:​\u200B{image.Filename} Size:\u200B{Utility.BytesToString(image.size)} Resolution:\u200B{image.Resolution} Index:\u200B{index + 1}/{images.Count}";
+            textBox1.Text = $"File:​\u200B{image.Filename.TrimExt(200)} Size:\u200B{Utility.BytesToString(image.size)} " +
+                $"Resolution:\u200B{image.Resolution} Score:\u200B{image.Score} Index:\u200B{index + 1}/{images.Count}";
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

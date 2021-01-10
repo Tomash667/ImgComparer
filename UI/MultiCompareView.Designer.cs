@@ -26,6 +26,7 @@
             this.Score = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Resolution = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Similarity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Action = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -102,6 +103,7 @@
             this.Score,
             this.FileSize,
             this.Resolution,
+            this.Similarity,
             this.Action});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(3, 459);
@@ -126,6 +128,7 @@
             this.Score.HeaderText = "Score";
             this.Score.Name = "Score";
             this.Score.ReadOnly = true;
+            this.Score.Width = 75;
             // 
             // FileSize
             // 
@@ -140,6 +143,14 @@
             this.Resolution.HeaderText = "Resolution";
             this.Resolution.Name = "Resolution";
             this.Resolution.ReadOnly = true;
+            // 
+            // Similarity
+            // 
+            this.Similarity.DataPropertyName = "Similarity";
+            this.Similarity.HeaderText = "Similarity";
+            this.Similarity.Name = "Similarity";
+            this.Similarity.ReadOnly = true;
+            this.Similarity.Width = 75;
             // 
             // Action
             // 
@@ -160,6 +171,7 @@
             this.Text = "Multi-image compare";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MultiCompareView_FormClosing);
+            this.Load += new System.EventHandler(this.MultiCompareView_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
@@ -180,6 +192,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Score;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileSize;
         private System.Windows.Forms.DataGridViewTextBoxColumn Resolution;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Similarity;
         private System.Windows.Forms.DataGridViewComboBoxColumn Action;
     }
 }
