@@ -216,6 +216,19 @@ namespace ImgComparer
             return score.ToString("0.##");
         }
 
+        public int GetUniqueDuplicates()
+        {
+            if (duplicates.Count < 2)
+                return duplicates.Count * 2;
+            HashSet<Image> dupImages = new HashSet<Image>();
+            foreach (Duplicate dup in duplicates)
+            {
+                dupImages.Add(dup.image1);
+                dupImages.Add(dup.image2);
+            }
+            return dupImages.Count;
+        }
+
         public void RecalculateHashes(Action<int> progress)
         {
             int count = imagesDict.Count * 2;

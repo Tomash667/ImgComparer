@@ -55,10 +55,7 @@ namespace ImgComparer.UI
 
             inInit = true;
             dataGridView1.AutoGenerateColumns = false;
-            //dataGridView1.SuspendLayout();
             dataGridView1.DataSource = bindingList;
-            //dataGridView1.ResumeLayout();
-            //dataGridView1.Rows[0].Selected = true;
             inInit = false;
         }
 
@@ -165,6 +162,50 @@ namespace ImgComparer.UI
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void dataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex != -1 && e.RowIndex != -1 && e.Button == MouseButtons.Right)
+            {
+                DataGridViewCell c = (sender as DataGridView)[e.ColumnIndex, e.RowIndex];
+                if (!c.Selected)
+                {
+                    c.DataGridView.ClearSelection();
+                    c.DataGridView.CurrentCell = c;
+                    c.Selected = true;
+                }
+            }
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            if (dataGridView1.CurrentRow == null || dataGridView1.CurrentRow.Index == -1)
+                e.Cancel = true;
+            var point = dataGridView1.PointToClient(Cursor.Position);
+            var hit = dataGridView1.HitTest(point.X, point.Y);
+            if (hit.Type != DataGridViewHitTestType.Cell && hit.Type != DataGridViewHitTestType.RowHeader)
+                e.Cancel = true;
+        }
+
+        private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = dataGridView1.CurrentRow.Index;
+            Image image = items[index].image;
+            Utility.OpenInExplorer(image.path);
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var editingControl = dataGridView1.EditingControl as DataGridViewComboBoxEditingControl;
+            if (editingControl != null)
+                editingControl.DroppedDown = true;
+        }
+
+        private void MultiCompareView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                Close();
         }
 
         private void MultiCompareView_FormClosing(object sender, FormClosingEventArgs e)

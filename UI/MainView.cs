@@ -195,7 +195,7 @@ namespace ImgComparer.UI
                 RefreshImages();
             changes = changed;
             Text = $"ImgComparer - {db.path}{(changes ? "*" : "")}";
-            toolStripStatusLabel1.Text = $"Sorted images:{db.sortedImages.Count}/{db.imagesDict.Count} Duplicates:{db.duplicates.Count}";
+            toolStripStatusLabel1.Text = $"Sorted images:{db.sortedImages.Count}/{db.imagesDict.Count} Duplicates:{db.GetUniqueDuplicates()}";
             sortToolStripMenuItem1.Enabled = (db.newImages.Count != 0);
             resolveDuplicatesToolStripMenuItem.Enabled = (db.duplicates.Count != 0);
         }
@@ -264,7 +264,7 @@ namespace ImgComparer.UI
             MessageBox.Show(this, $"Scanning complete!\n" +
                 $"New images: {newImages}\n" +
                 $"Replaced images: {replaced}\n" +
-                $"Possible duplicates: {db.duplicates.Count}\n" +
+                $"Possible duplicates: {db.GetUniqueDuplicates()}\n" +
                 $"Removed duplicates: {db.exactDuplicates.Count}\n" +
                 $"Missing images: {db.missing.Count}");
         }
