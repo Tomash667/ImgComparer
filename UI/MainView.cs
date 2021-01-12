@@ -36,8 +36,10 @@ namespace ImgComparer.UI
             settings = Properties.Settings.Default;
             recentProjects = settings.Recent.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             PopulateRecentProjects();
+            images = new SortableList<Image>();
+            dataGridView1.DataSource = images;
+            dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
         }
-
 
         private void MainView_Load(object sender, EventArgs e)
         {
@@ -47,6 +49,7 @@ namespace ImgComparer.UI
                 imagesToolStripMenuItem.Enabled = true;
                 saveToolStripMenuItem.Enabled = true;
                 UpdateStatus(changed: false, calculateScore: false);
+                dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
             }
         }
 
@@ -82,9 +85,7 @@ namespace ImgComparer.UI
             }
             var column = dataGridView1.SortedColumn;
             var order = dataGridView1.SortOrder;
-            images = new SortableList<Image>(db.imagesDict.Values);
-            dataGridView1.DataSource = images;
-            dataGridView1.Sort(column ?? dataGridView1.Columns[0], order == SortOrder.Descending ? ListSortDirection.Descending : ListSortDirection.Ascending);
+            images.ResetItems(db.imagesDict.Values);
             if (selected != null)
             {
                 int index = images.IndexOf(selected);
@@ -181,9 +182,11 @@ namespace ImgComparer.UI
                 db.Open(path);
                 imagesToolStripMenuItem.Enabled = true;
                 saveToolStripMenuItem.Enabled = true;
+                tFilter.Clear();
+                images.ResetItems();
+                dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
                 UpdateStatus(changed: false, calculateScore: false);
                 UpdateRecent(path);
-                tFilter.Clear();
             }
         }
 
@@ -485,9 +488,11 @@ namespace ImgComparer.UI
             db.Open(path);
             imagesToolStripMenuItem.Enabled = true;
             saveToolStripMenuItem.Enabled = true;
+            tFilter.Clear();
+            images.ResetItems();
+            dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
             UpdateStatus(changed: false, calculateScore: false);
             UpdateRecent(path);
-            tFilter.Clear();
         }
 
         private void resetScoreToolStripMenuItem_Click(object sender, EventArgs e)
@@ -525,16 +530,12 @@ namespace ImgComparer.UI
                 tFilter.Clear();
                 images.ClearFilter();
             }
-            dataGridView1.Sort(column, order == SortOrder.Descending ? ListSortDirection.Descending : ListSortDirection.Ascending);
         }
 
         private void btClear_Click(object sender, EventArgs e)
         {
-            var column = dataGridView1.SortedColumn;
-            SortOrder order = dataGridView1.SortOrder;
             tFilter.Clear();
             images.ClearFilter();
-            dataGridView1.Sort(column, order == SortOrder.Descending ? ListSortDirection.Descending : ListSortDirection.Ascending);
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)

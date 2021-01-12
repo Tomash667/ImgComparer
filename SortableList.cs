@@ -8,12 +8,11 @@ namespace ImgComparer
 {
     public class SortableList<T> : BindingList<T>
     {
-        // reference to the list provided at the time of instantiation
         private List<T> originalList, filteredList;
         private ListSortDirection sortDirection;
         private PropertyDescriptor sortProperty;
-        private bool filtered;
         private Func<List<T>, IEnumerable<T>> sortFunc;
+        private Func<T, bool> filterFunc;
 
         // a cache of functions that perform the sorting
         // for a given type, property, and sort direction
@@ -21,14 +20,49 @@ namespace ImgComparer
             new Dictionary<string, Func<List<T>, IEnumerable<T>>>();
 
         protected override bool SupportsSortingCore => true;
+        protected override bool IsSortedCore => true;
         protected override ListSortDirection SortDirectionCore => sortDirection;
         protected override PropertyDescriptor SortPropertyCore => sortProperty;
+
+        public SortableList()
+        {
+            originalList = new List<T>();
+            filteredList = originalList;
+            ResetItemsInternal(filteredList);
+        }
 
         public SortableList(IEnumerable<T> enumerable)
         {
             originalList = enumerable.ToList();
             filteredList = originalList;
-            ResetItems(filteredList);
+            ResetItemsInternal(filteredList);
+        }
+
+        public void ResetItems()
+        {
+            filterFunc = null;
+            originalList.Clear();
+            filteredList = originalList;
+            ResetItemsInternal(filteredList);
+            base.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        }
+
+        public void ResetItems(IEnumerable<T> items)
+        {
+            originalList = items.ToList();
+            if (filterFunc != null)
+                filteredList = originalList.Where(x => filterFunc(x)).ToList();
+            else
+                filteredList = originalList;
+            ResetItemsInternal(ApplySort(filteredList));
+            base.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        }
+
+        private void ResetItemsInternal(IEnumerable<T> items)
+        {
+            ClearItems();
+            foreach (T item in items)
+                Add(item);
         }
 
         /// <summary>
@@ -40,7 +74,10 @@ namespace ImgComparer
         protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
         {
             if (sortProperty == prop && sortDirection == direction)
+            {
+                ResetBindings();
                 return;
+            }
 
             sortProperty = prop;
             sortDirection = direction;
@@ -53,7 +90,7 @@ namespace ImgComparer
                 CreateOrderByMethod(prop, orderByMethodName, cacheKey);
 
             sortFunc = cachedOrderByExpressions[cacheKey];
-            ResetItems(sortFunc(filteredList));
+            ResetItemsInternal(sortFunc(filteredList));
             ResetBindings();
         }
 
@@ -95,14 +132,7 @@ namespace ImgComparer
 
         protected override void RemoveSortCore()
         {
-            ResetItems(filteredList);
-        }
-
-        private void ResetItems(IEnumerable<T> items)
-        {
-            ClearItems();
-            foreach (T item in items)
-                Add(item);
+            ResetItemsInternal(filteredList);
         }
 
         private IEnumerable<T> ApplySort(List<T> items)
@@ -115,24 +145,19 @@ namespace ImgComparer
 
         public void ApplyFilter(Func<T, bool> pred)
         {
-            filtered = true;
-            filteredList = new List<T>();
-            foreach (T item in originalList)
-            {
-                if (pred(item))
-                    filteredList.Add(item);
-            }
-            ResetItems(ApplySort(filteredList));
+            filterFunc = pred;
+            filteredList = originalList.Where(x => filterFunc(x)).ToList();
+            ResetItemsInternal(ApplySort(filteredList));
             base.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
 
         public void ClearFilter()
         {
-            if (filtered)
+            if (filterFunc != null)
             {
-                filtered = false;
+                filterFunc = null;
                 filteredList = originalList;
-                ResetItems(ApplySort(filteredList));
+                ResetItemsInternal(ApplySort(filteredList));
                 base.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
             }
         }
