@@ -180,12 +180,15 @@ namespace ImgComparer.UI
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            if (dataGridView1.CurrentRow == null || dataGridView1.CurrentRow.Index == -1)
-                e.Cancel = true;
-            var point = dataGridView1.PointToClient(Cursor.Position);
-            var hit = dataGridView1.HitTest(point.X, point.Y);
-            if (hit.Type != DataGridViewHitTestType.Cell && hit.Type != DataGridViewHitTestType.RowHeader)
-                e.Cancel = true;
+            if (contextMenuStrip1.SourceControl == dataGridView1)
+            {
+                if (dataGridView1.CurrentRow == null || dataGridView1.CurrentRow.Index == -1)
+                    e.Cancel = true;
+                var point = dataGridView1.PointToClient(Cursor.Position);
+                var hit = dataGridView1.HitTest(point.X, point.Y);
+                if (hit.Type != DataGridViewHitTestType.Cell && hit.Type != DataGridViewHitTestType.RowHeader)
+                    e.Cancel = true;
+            }
         }
 
         private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -206,6 +209,19 @@ namespace ImgComparer.UI
         {
             if (e.KeyCode == Keys.Escape)
                 Close();
+        }
+
+        private void previewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<Image> images = items.Select(x => x.image).ToList();
+            System.Drawing.Image[] realImages = new System.Drawing.Image[items.Count];
+            int index = dataGridView1.SelectedRows[0].Index;
+            realImages[index] = pictureBox1.Image;
+            using (Preview preview = new Preview(images[index], images, realImages))
+            {
+                if (preview.Ok)
+                    preview.ShowDialog(this);
+            }
         }
 
         private void MultiCompareView_FormClosing(object sender, FormClosingEventArgs e)

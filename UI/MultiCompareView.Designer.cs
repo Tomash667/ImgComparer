@@ -30,6 +30,7 @@
             this.Similarity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Action = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.previewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -58,6 +59,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Black;
+            this.pictureBox1.ContextMenuStrip = this.contextMenuStrip1;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
@@ -65,6 +67,7 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.DoubleClick += new System.EventHandler(this.previewToolStripMenuItem_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -170,10 +173,19 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.previewToolStripMenuItem,
             this.openInExplorerToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 48);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // previewToolStripMenuItem
+            // 
+            this.previewToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
+            this.previewToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.previewToolStripMenuItem.Text = "Preview";
+            this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
             // 
             // openInExplorerToolStripMenuItem
             // 
@@ -222,5 +234,6 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn Action;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openInExplorerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem previewToolStripMenuItem;
     }
 }

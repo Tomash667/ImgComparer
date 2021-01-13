@@ -30,6 +30,7 @@
             this.btBoth = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.previewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -69,13 +70,15 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.previewToolStripMenuItem,
             this.openInExplorerToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 48);
             // 
             // openInExplorerToolStripMenuItem
             // 
@@ -95,6 +98,7 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 1;
             this.pictureBox2.TabStop = false;
+            this.pictureBox2.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
             // 
             // tableLayoutPanel2
             // 
@@ -205,6 +209,14 @@
             this.textBox2.TabStop = false;
             this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // previewToolStripMenuItem
+            // 
+            this.previewToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
+            this.previewToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.previewToolStripMenuItem.Text = "Preview";
+            this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
+            // 
             // CompareView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -245,6 +257,7 @@
         private System.Windows.Forms.Button btBoth;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openInExplorerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem previewToolStripMenuItem;
     }
 }
 

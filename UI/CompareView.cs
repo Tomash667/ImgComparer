@@ -1,6 +1,7 @@
 ﻿using ImgComparer.Model;
 using ImgComparer.Tools;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace ImgComparer.UI
@@ -145,6 +146,25 @@ namespace ImgComparer.UI
         {
             if (e.KeyCode == Keys.Escape)
                 Close();
+        }
+
+        private void previewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var pictureBox = ((ContextMenuStrip)(sender as ToolStripMenuItem).Owner).SourceControl;
+            pictureBox1_DoubleClick(pictureBox, e);
+        }
+
+        private void pictureBox1_DoubleClick(object sender, EventArgs e)
+        {
+            var pictureBox = sender as PictureBox;
+            Image image = (pictureBox == pictureBox1 ? image1 : image2);
+            List<Image> images = new List<Image> { image1, image2 };
+            System.Drawing.Image[] realImages = new System.Drawing.Image[] { pictureBox1.Image, pictureBox2.Image };
+            using (Preview preview = new Preview(image, images, realImages))
+            {
+                if (preview.Ok)
+                    preview.ShowDialog(this);
+            }
         }
 
         private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)

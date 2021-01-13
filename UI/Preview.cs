@@ -1,5 +1,6 @@
 ﻿using ImgComparer.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -7,14 +8,17 @@ namespace ImgComparer.UI
 {
     public partial class Preview : Form
     {
-        private SortableList<Image> images;
+        private readonly IList<Image> images;
+        private readonly System.Drawing.Image[] realImages;
         private int index;
+        private bool imageOwner;
 
         public bool Ok => pictureBox1.Image != null;
 
-        public Preview(Image image, SortableList<Image> images)
+        public Preview(Image image, IList<Image> images, System.Drawing.Image[] realImages = null)
         {
             this.images = images;
+            this.realImages = realImages;
             InitializeComponent();
             ChangeImage(images.IndexOf(image));
         }
@@ -23,7 +27,8 @@ namespace ImgComparer.UI
         {
             if (disposing)
             {
-                pictureBox1.Image.Dispose();
+                if (imageOwner)
+                    pictureBox1.Image.Dispose();
                 components?.Dispose();
             }
             base.Dispose(disposing);
@@ -32,16 +37,23 @@ namespace ImgComparer.UI
         private void ChangeImage(int index)
         {
             this.index = index;
-            if (pictureBox1.Image != null)
+            if (pictureBox1.Image != null && imageOwner)
             {
                 pictureBox1.Image.Dispose();
                 pictureBox1.Image = null;
+                imageOwner = false;
             }
 
             Image image = images[index];
             try
             {
-                pictureBox1.Image = System.Drawing.Image.FromFile(image.path);
+                if (realImages == null || realImages[index] == null)
+                {
+                    pictureBox1.Image = System.Drawing.Image.FromFile(image.path);
+                    imageOwner = true;
+                }
+                else
+                    pictureBox1.Image = realImages[index];
             }
             catch (Exception ex)
             {
@@ -55,7 +67,7 @@ namespace ImgComparer.UI
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if(keyData == Keys.Escape)
+            if (keyData == Keys.Escape)
             {
                 Close();
                 return true;
