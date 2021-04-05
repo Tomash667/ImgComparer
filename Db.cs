@@ -144,7 +144,8 @@ namespace ImgComparer
                         path = $"{path}\\{newFile}",
                         found = true
                     };
-                    System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(image.path);
+
+                    System.Drawing.Bitmap bmp = ImageLoader.Load(image.path);
                     image.hash = DHash.Calculate(bmp);
                     image.width = bmp.Width;
                     image.height = bmp.Height;

@@ -61,8 +61,8 @@ namespace ImgComparer.UI
             this.image1 = image1;
             this.image2 = image2;
 
-            pictureBox1.Image = System.Drawing.Image.FromFile(image1.path);
-            pictureBox2.Image = System.Drawing.Image.FromFile(image2.path);
+            pictureBox1.Image = ImageLoader.Load(image1.path);
+            pictureBox2.Image = ImageLoader.Load(image2.path);
             DialogResult = DialogResult.None;
             textBox1.Text = $"File:​\u200B{image1.Filename.TrimExt(100)} Size:\u200B{Utility.BytesToString(image1.size)} Resolution:\u200B{image1.Resolution}";
             if (image1.score > 0)

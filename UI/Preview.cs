@@ -1,4 +1,5 @@
 ﻿using ImgComparer.Model;
+using ImgComparer.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace ImgComparer.UI
             {
                 if (realImages == null || realImages[index] == null)
                 {
-                    pictureBox1.Image = System.Drawing.Image.FromFile(image.path);
+                    pictureBox1.Image = ImageLoader.Load(image.path);
                     imageOwner = true;
                 }
                 else

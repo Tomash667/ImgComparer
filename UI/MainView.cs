@@ -243,6 +243,9 @@ namespace ImgComparer.UI
 
         private void Dialog_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (e.Error != null)
+                MessageBox.Show(this, $"Error during scan!\n{e.Error}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             int newImages = db.newImages.Count - imageCount;
             Enabled = true;
 
@@ -472,6 +475,8 @@ namespace ImgComparer.UI
 
         private void Dialog_RunWorkerCompleted1(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (e.Error != null)
+                MessageBox.Show(this, $"Error during recalculating hashes!\n{e.Error}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             Enabled = true;
             ResolveDuplicates();
             UpdateStatus();

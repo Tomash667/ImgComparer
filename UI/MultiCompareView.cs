@@ -87,7 +87,7 @@ namespace ImgComparer.UI
                 pictureBox1.Image.Dispose();
             try
             {
-                pictureBox1.Image = System.Drawing.Image.FromFile(item.image.path);
+                pictureBox1.Image = ImageLoader.Load(item.image.path);
             }
             catch (Exception)
             {
