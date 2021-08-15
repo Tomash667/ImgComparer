@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -50,7 +51,15 @@ namespace ImgComparer
         public static void OpenInExplorer(string path)
         {
             if (!File.Exists(path))
+            {
+                if (Directory.Exists(path))
+                {
+                    if (!path.EndsWith("\\"))
+                        path += "\\";
+                    Process.Start(path);
+                }
                 return;
+            }
 
             string dir = Path.GetDirectoryName(path);
             SHParseDisplayName(dir, IntPtr.Zero, out IntPtr folder, 0, out uint _);

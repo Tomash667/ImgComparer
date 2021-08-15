@@ -24,6 +24,7 @@ namespace ImgComparer.UI
             dataGridView1.AutoGenerateColumns = false;
             imagesToolStripMenuItem.Enabled = false;
             saveToolStripMenuItem.Enabled = false;
+            exploreFolderToolStripMenuItem.Enabled = false;
             sortToolStripMenuItem1.Enabled = false;
             resolveDuplicatesToolStripMenuItem.Enabled = false;
             toolStripStatusLabel1.Text = "";
@@ -48,6 +49,7 @@ namespace ImgComparer.UI
                 db.Open(recentProjects[0]);
                 imagesToolStripMenuItem.Enabled = true;
                 saveToolStripMenuItem.Enabled = true;
+                exploreFolderToolStripMenuItem.Enabled = true;
                 UpdateStatus(changed: false, calculateScore: false);
                 dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
             }
@@ -182,6 +184,7 @@ namespace ImgComparer.UI
                 db.Open(path);
                 imagesToolStripMenuItem.Enabled = true;
                 saveToolStripMenuItem.Enabled = true;
+                exploreFolderToolStripMenuItem.Enabled = true;
                 tFilter.Clear();
                 images.ResetItems();
                 dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
@@ -494,6 +497,7 @@ namespace ImgComparer.UI
             db.Open(path);
             imagesToolStripMenuItem.Enabled = true;
             saveToolStripMenuItem.Enabled = true;
+            exploreFolderToolStripMenuItem.Enabled = true;
             tFilter.Clear();
             images.ResetItems();
             dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
@@ -567,6 +571,11 @@ namespace ImgComparer.UI
         {
             OptionsView options = new OptionsView();
             options.ShowDialog(this);
+        }
+
+        private void exploreFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Utility.OpenInExplorer(db.path);
         }
     }
 }
