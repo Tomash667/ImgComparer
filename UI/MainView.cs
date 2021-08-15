@@ -280,7 +280,7 @@ namespace ImgComparer.UI
             if (db.duplicates.Count == 0)
                 return (0, 0);
 
-            int replaced = 0, removed = 0;
+            int replaced = 0, removed = 0, indexOf = 1, totalCount = db.duplicates.Count;
             CompareView compare = new CompareView(db, true);
             compare.Owner = this;
             Enabled = false;
@@ -292,7 +292,7 @@ namespace ImgComparer.UI
                 int? complex = null;
                 if (db.duplicates.Any(x => x != duplicate && x.IsSameImage(duplicate)))
                     complex = db.duplicates.Count(x => x != duplicate && x.IsSameImage(duplicate));
-                DialogResult result = compare.Show(duplicate.image1, duplicate.image2, duplicate.dist, complex);
+                DialogResult result = compare.Show(duplicate.image1, duplicate.image2, duplicate.dist, complex, indexOf, totalCount);
                 if (result != DialogResult.OK)
                     break;
 
@@ -308,7 +308,7 @@ namespace ImgComparer.UI
                         db.newImages.Remove(duplicate.image1);
                         db.imagesDict.Remove(duplicate.image2.Filename);
                         Utility.SafeDelete(this, duplicate.image2.path);
-                        db.duplicates.RemoveAll(x => x.image1 == duplicate.image2 || x.image2 == duplicate.image2);
+                        indexOf += db.duplicates.RemoveAll(x => x.image1 == duplicate.image2 || x.image2 == duplicate.image2);
                         ++replaced;
                     }
                     else
@@ -316,7 +316,7 @@ namespace ImgComparer.UI
                         db.newImages.Remove(duplicate.image2);
                         db.imagesDict.Remove(duplicate.image2.Filename);
                         Utility.SafeDelete(this, duplicate.image2.path);
-                        db.duplicates.RemoveAll(x => x.image1 == duplicate.image2 || x.image2 == duplicate.image2);
+                        indexOf += db.duplicates.RemoveAll(x => x.image1 == duplicate.image2 || x.image2 == duplicate.image2);
                         ++removed;
                     }
                     break;
@@ -325,12 +325,13 @@ namespace ImgComparer.UI
                     db.newImages.Remove(duplicate.image1);
                     db.imagesDict.Remove(duplicate.image1.Filename);
                     Utility.SafeDelete(this, duplicate.image1.path);
-                    db.duplicates.RemoveAll(x => x.image1 == duplicate.image1 || x.image2 == duplicate.image1);
+                    indexOf += db.duplicates.RemoveAll(x => x.image1 == duplicate.image1 || x.image2 == duplicate.image1);
                     ++removed;
                     break;
                 case CompareView.Result.Both:
                     // keep both
                     db.duplicates.RemoveAt(0);
+                    ++indexOf;
                     break;
                 case CompareView.Result.Complex:
                     {
@@ -354,7 +355,7 @@ namespace ImgComparer.UI
                                 cancel = true;
                             else if (result2 == DialogResult.OK)
                             {
-                                db.duplicates.RemoveAll(x => dups.Contains(x));
+                                indexOf += db.duplicates.RemoveAll(x => dups.Contains(x));
                                 replaced += view.replaced;
                                 removed += view.removed;
                             }

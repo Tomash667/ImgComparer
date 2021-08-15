@@ -56,7 +56,7 @@ namespace ImgComparer.UI
             base.Dispose(disposing);
         }
 
-        public DialogResult Show(Image image1, Image image2, int? dist = null, int? complex = null)
+        public DialogResult Show(Image image1, Image image2, int? dist = null, int? complex = null, int? indexOf = null, int? totalCount = null)
         {
             this.image1 = image1;
             this.image2 = image2;
@@ -103,6 +103,9 @@ namespace ImgComparer.UI
                 }
             }
 
+            if (indexOf.HasValue)
+                Text = $"Possible duplicate found ({indexOf} of {totalCount})";
+
             Show();
             while (DialogResult == DialogResult.None)
             {
@@ -144,8 +147,21 @@ namespace ImgComparer.UI
 
         private void CompareView_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
+            switch (e.KeyCode)
+            {
+            case Keys.Escape:
                 Close();
+                break;
+            case Keys.D1:
+                btLeft_Click(null, null);
+                break;
+            case Keys.D2:
+                btBoth_Click(null, null);
+                break;
+            case Keys.D3:
+                btRight_Click(null, null);
+                break;
+            }
         }
 
         private void previewToolStripMenuItem_Click(object sender, EventArgs e)
