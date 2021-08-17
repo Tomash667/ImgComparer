@@ -228,6 +228,7 @@ namespace ImgComparer.UI
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Utility.DeleteFiles(this);
             db.Save();
             UpdateStatus(calculateScore: false, changed: false, refreshImages: false);
         }
@@ -253,7 +254,7 @@ namespace ImgComparer.UI
             Enabled = true;
 
             foreach (string path in db.exactDuplicates)
-                Utility.SafeDelete(this, path);
+                Utility.MarkToDelete(path);
 
             foreach (Image image in db.missing)
             {
@@ -268,7 +269,7 @@ namespace ImgComparer.UI
             (int replaced, int removed) = ResolveDuplicates();
             newImages -= removed;
 
-            if (newImages > 0 || replaced > 0 || removed > 0 || db.missing.Count > 0)
+            if (newImages > 0 || replaced > 0 || removed > 0 || db.missing.Count > 0 || db.exactDuplicates.Count > 0)
                 UpdateStatus();
             MessageBox.Show(this, $"Scanning complete!\n" +
                 $"New images: {newImages}\n" +
@@ -310,7 +311,7 @@ namespace ImgComparer.UI
                         db.sortedImages[index] = duplicate.image1;
                         db.newImages.Remove(duplicate.image1);
                         db.imagesDict.Remove(duplicate.image2.Filename);
-                        Utility.SafeDelete(this, duplicate.image2.path);
+                        Utility.MarkToDelete(duplicate.image2.path);
                         indexOf += db.duplicates.RemoveAll(x => x.image1 == duplicate.image2 || x.image2 == duplicate.image2);
                         ++replaced;
                     }
@@ -318,7 +319,7 @@ namespace ImgComparer.UI
                     {
                         db.newImages.Remove(duplicate.image2);
                         db.imagesDict.Remove(duplicate.image2.Filename);
-                        Utility.SafeDelete(this, duplicate.image2.path);
+                        Utility.MarkToDelete(duplicate.image2.path);
                         indexOf += db.duplicates.RemoveAll(x => x.image1 == duplicate.image2 || x.image2 == duplicate.image2);
                         ++removed;
                     }
@@ -327,7 +328,7 @@ namespace ImgComparer.UI
                     // keep existing
                     db.newImages.Remove(duplicate.image1);
                     db.imagesDict.Remove(duplicate.image1.Filename);
-                    Utility.SafeDelete(this, duplicate.image1.path);
+                    Utility.MarkToDelete(duplicate.image1.path);
                     indexOf += db.duplicates.RemoveAll(x => x.image1 == duplicate.image1 || x.image2 == duplicate.image1);
                     ++removed;
                     break;
@@ -562,7 +563,7 @@ namespace ImgComparer.UI
                 else
                     db.sortedImages.Remove(image);
                 db.imagesDict.Remove(image.Filename);
-                Utility.SafeDelete(this, image.path);
+                Utility.MarkToDelete(image.path);
                 UpdateStatus(calculateScore: image.score != 0);
             }
         }

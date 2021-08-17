@@ -142,7 +142,7 @@ namespace ImgComparer.UI
                         db.sortedImages[imgIndex] = replacement;
                         db.imagesDict.Remove(item.image.Filename);
                         db.duplicates.RemoveAll(x => x.image1 == item.image || x.image2 == item.image);
-                        Utility.SafeDelete(this, item.image.path);
+                        Utility.MarkToDelete(item.image.path);
                         ++replaced;
                     }
                     else if (item.action == "remove")
@@ -150,7 +150,7 @@ namespace ImgComparer.UI
                         db.newImages.Remove(item.image);
                         db.imagesDict.Remove(item.Filename);
                         db.duplicates.RemoveAll(x => x.image1 == item.image || x.image2 == item.image);
-                        Utility.SafeDelete(this, item.image.path);
+                        Utility.MarkToDelete(item.image.path);
                         ++removed;
                     }
                 }

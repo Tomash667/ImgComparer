@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -10,6 +11,7 @@ namespace ImgComparer
     public static class Utility
     {
         private static Random rnd = new Random();
+        private static List<string> toDelete = new List<string>();
 
         [DllImport("shell32.dll")]
         private static extern int SHOpenFolderAndSelectItems(IntPtr pidlFolder, uint cidl, [MarshalAs(UnmanagedType.LPArray)] IntPtr[] apidl, uint dwFlags);
@@ -30,22 +32,30 @@ namespace ImgComparer
             return (Math.Sign(byteCount) * num).ToString() + suf[place];
         }
 
-        public static void SafeDelete(IWin32Window owner, string path)
+        public static void MarkToDelete(string path)
         {
-            while (File.Exists(path))
+            toDelete.Add(path);
+        }
+
+        public static bool DeleteFiles(IWin32Window owner)
+        {
+            while (toDelete.Count > 0)
             {
+                string path = toDelete[0];
                 try
                 {
                     FileSystem.DeleteFile(path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
-                    return;
+                    toDelete.RemoveAt(0);
                 }
                 catch (Exception ex)
                 {
                     DialogResult result = MessageBox.Show(owner, $"Failed to delete file {path}.\n{ex.Message}", "Retry?", MessageBoxButtons.RetryCancel);
                     if (result == DialogResult.Cancel)
-                        return;
+                        return false;
                 }
             }
+
+            return true;
         }
 
         public static void OpenInExplorer(string path)
