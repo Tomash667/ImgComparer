@@ -120,8 +120,9 @@ namespace ImgComparer.UI
                             throw new Exception($"{item.Filename} - Can't replace with itself!");
                         if (items[index].action != "keep")
                             throw new Exception($"{item.Filename} - Can't replace with '{items[index]}', image not kept!");
-                        if (items[index].image.score == 0)
+                        if (item.image.score == 0)
                             throw new Exception($"{item.Filename} - Can't replace with '{items[index]}', image not scored - use remove!");
+                        replaces.Add(item.action);
                     }
                     else if (item.action == "remove" && item.image.score != 0)
                         throw new Exception($"{item.Filename} - Can't remove scored image, must replace.");
