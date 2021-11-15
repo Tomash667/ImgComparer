@@ -17,6 +17,7 @@ namespace ImgComparer
         public List<Image> sortedImages = new List<Image>();
         public List<Image> missing = new List<Image>();
         public List<string> exactDuplicates = new List<string>();
+        public List<string> invalidFiles = new List<string>();
         public string path;
         private string filePath => $"{path}\\images.db";
         public List<Duplicate> duplicates;
@@ -113,6 +114,7 @@ namespace ImgComparer
         {
             missing.Clear();
             exactDuplicates.Clear();
+            invalidFiles.Clear();
             foreach (KeyValuePair<string, Image> kvp in imagesDict)
                 kvp.Value.found = false;
 
@@ -146,38 +148,44 @@ namespace ImgComparer
                     };
 
                     System.Drawing.Bitmap bmp = ImageLoader.Load(image.path);
-                    image.hash = DHash.Calculate(bmp);
-                    image.width = bmp.Width;
-                    image.height = bmp.Height;
-                    image.size = new FileInfo(image.path).Length;
-                    bmp.Dispose();
-
-                    foreach (Image image2 in imagesDict.Select(x => x.Value).Where(x => x.found))
+                    if (bmp == null)
+                        invalidFiles.Add(image.path);
+                    else
                     {
-                        int dist = DHash.Distance(image.hash, image2.hash);
-                        if (dist == 0 && image.size == image2.size && image.ResolutionValue == image2.ResolutionValue)
+                        image.hash = DHash.Calculate(bmp);
+                        image.width = bmp.Width;
+                        image.height = bmp.Height;
+                        image.size = new FileInfo(image.path).Length;
+                        bmp.Dispose();
+
+                        foreach (Image image2 in imagesDict.Select(x => x.Value).Where(x => x.found))
                         {
-                            // exact duplicate, autodelete
-                            exactDuplicates.Add(image.path);
-                            image = null;
-                            break;
-                        }
-                        else if (dist < DHash.Margin && !duplicates.Any(x => x.image1 == image2 && x.image2 == image))
-                        {
-                            duplicates.Add(new Duplicate
+                            int dist = DHash.Distance(image.hash, image2.hash);
+                            if (dist == 0 && image.size == image2.size && image.ResolutionValue == image2.ResolutionValue)
                             {
-                                image1 = image,
-                                image2 = image2,
-                                dist = dist
-                            });
+                                // exact duplicate, autodelete
+                                exactDuplicates.Add(image.path);
+                                image = null;
+                                break;
+                            }
+                            else if (dist < DHash.Margin && !duplicates.Any(x => x.image1 == image2 && x.image2 == image))
+                            {
+                                duplicates.Add(new Duplicate
+                                {
+                                    image1 = image,
+                                    image2 = image2,
+                                    dist = dist
+                                });
+                            }
+                        }
+
+                        if (image != null)
+                        {
+                            imagesDict[newFile] = image;
+                            newImages.Add(image);
                         }
                     }
 
-                    if (image != null)
-                    {
-                        imagesDict[newFile] = image;
-                        newImages.Add(image);
-                    }
                     ++index;
                     progress(100 * index / newFiles.Count);
                 }

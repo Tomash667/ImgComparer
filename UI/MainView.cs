@@ -16,7 +16,7 @@ namespace ImgComparer.UI
         private int imageCount;
         private bool changes;
         private Properties.Settings settings;
-        private List<string> recentProjects;
+        private List<string> recentProjects, invalidFiles;
 
         public MainView()
         {
@@ -237,6 +237,7 @@ namespace ImgComparer.UI
         {
             Enabled = false;
             imageCount = db.newImages.Count;
+            invalidFiles = new List<string>(db.invalidFiles);
 
             Ookii.Dialogs.WinForms.ProgressDialog dialog = new Ookii.Dialogs.WinForms.ProgressDialog();
             dialog.Text = "Scanning directory...";
@@ -249,6 +250,10 @@ namespace ImgComparer.UI
         {
             if (e.Error != null)
                 MessageBox.Show(this, $"Error during scan!\n{e.Error}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            string[] newInvalidFiles = db.invalidFiles.Except(invalidFiles).ToArray();
+            if (newInvalidFiles.Length != 0)
+                MessageBox.Show(this, $"Failed to load some files:\n{string.Join("\n", newInvalidFiles)}", "Invalid files", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             int newImages = db.newImages.Count - imageCount;
             Enabled = true;

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 
 namespace ImgComparer.Tools
@@ -15,7 +16,16 @@ namespace ImgComparer.Tools
                 return decoder.DecodeFromBytes(bytes, bytes.Length);
             }
             else
-                return new Bitmap(path);
+            {
+                try
+                {
+                    return new Bitmap(path);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
         }
     }
 }

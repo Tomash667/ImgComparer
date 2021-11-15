@@ -1,0 +1,13 @@
+﻿TODO:
++ draw?, better algorithm?
++ zoom
++ replace duplicate, scored -> scored
++ 3 image compare
++ readme
++ release
++ image variants, collections
++ resize
++ tags
++ ctrl + z
++ better excluded handling (by file/ext, reset)
++ mp4 files
