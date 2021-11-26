@@ -14,20 +14,22 @@ namespace ImgComparer.UI
 
             settings = Properties.Settings.Default;
             cbAutoOpen.Checked = settings.AutoOpen;
-            textBox1.Text = settings.ImageBlob;
+            tbBlobUrl.Text = settings.ImageBlob;
+            tbExcludedExts.Text = settings.ExcludedExt;
         }
 
         private void btOk_Click(object sender, EventArgs e)
         {
             settings.AutoOpen = cbAutoOpen.Checked;
-            settings.ImageBlob = textBox1.Text.Trim();
+            settings.ImageBlob = tbBlobUrl.Text.Trim();
+            settings.ExcludedExt = tbExcludedExts.Text.Trim();
             settings.Save();
             Close();
         }
 
         private void btTest_Click(object sender, EventArgs e)
         {
-            string connectionString = textBox1.Text.Trim();
+            string connectionString = tbBlobUrl.Text.Trim();
             if (connectionString.Length > 0)
             {
                 if (ReverseImageSearch.Test(connectionString))

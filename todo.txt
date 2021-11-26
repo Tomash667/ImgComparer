@@ -9,5 +9,5 @@
 + resize
 + tags
 + ctrl + z
-+ better excluded handling (by file/ext, reset)
++ better excluded handling (by file, reset)
 + mp4 files

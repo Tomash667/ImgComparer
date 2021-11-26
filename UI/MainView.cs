@@ -44,6 +44,7 @@ namespace ImgComparer.UI
 
         private void MainView_Load(object sender, EventArgs e)
         {
+            db.SetExcludedExtensions(settings.ExcludedExt);
             if (settings.AutoOpen && recentProjects.Count > 0)
             {
                 db.Open(recentProjects[0]);
@@ -577,6 +578,7 @@ namespace ImgComparer.UI
         {
             OptionsView options = new OptionsView();
             options.ShowDialog(this);
+            db.SetExcludedExtensions(settings.ExcludedExt);
         }
 
         private void exploreFolderToolStripMenuItem_Click(object sender, EventArgs e)

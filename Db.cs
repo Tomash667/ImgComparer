@@ -10,7 +10,7 @@ namespace ImgComparer
     public class Db
     {
         private readonly byte[] Sign = new byte[] { (byte)'I', (byte)'M', (byte)'G', 0xDB };
-        private readonly string[] excludedExt = new string[] { ".db" };
+        private string[] excludedExt;
 
         public Dictionary<string, Image> imagesDict = new Dictionary<string, Image>();
         public List<Image> newImages = new List<Image>();
@@ -271,6 +271,13 @@ namespace ImgComparer
                 ++index;
                 progress((int)(100.0f * index / count));
             }
+        }
+
+        public void SetExcludedExtensions(string value)
+        {
+            excludedExt = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => '.' + x)
+                .ToArray();
         }
     }
 }

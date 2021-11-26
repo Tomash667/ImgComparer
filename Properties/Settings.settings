@@ -11,5 +11,8 @@
     <Setting Name="ImageBlob" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="ExcludedExt" Type="System.String" Scope="User">
+      <Value Profile="(Default)">db</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
