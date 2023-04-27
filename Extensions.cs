@@ -1,4 +1,6 @@
-﻿namespace ImgComparer
+﻿using System.Collections.Generic;
+
+namespace ImgComparer
 {
     public static class Extensions
     {
@@ -17,6 +19,13 @@
             }
             else
                 return str;
+        }
+
+        public static T GetValueOptional<T>(this Dictionary<string, T> dict, string key)
+        {
+            if (dict.TryGetValue(key, out T value))
+                return value;
+            return default;
         }
     }
 }

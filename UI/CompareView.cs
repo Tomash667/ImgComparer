@@ -73,20 +73,22 @@ namespace ImgComparer.UI
             if (dist.HasValue)
             {
                 btBoth.Text = $"Keep both\n({DHash.ToSimilarity(dist.Value)}% similarity)";
-                if (image2.size >= image1.size && image2.ResolutionValue >= image1.ResolutionValue && complex == null)
+
+                int cmp = image1.Compare(image2);
+                if (complex != null || cmp == 0)
                 {
-                    btRight.Font = boldFont;
                     btLeft.Font = normalFont;
+                    btRight.Font = normalFont;
                 }
-                else if (image1.size >= image2.size && image1.ResolutionValue >= image2.ResolutionValue && complex == null)
+                else if (cmp == 1)
                 {
                     btLeft.Font = boldFont;
                     btRight.Font = normalFont;
                 }
                 else
                 {
+                    btRight.Font = boldFont;
                     btLeft.Font = normalFont;
-                    btRight.Font = normalFont;
                 }
 
                 if (complex.HasValue)

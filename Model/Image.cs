@@ -42,5 +42,19 @@ namespace ImgComparer.Model
             width = reader.ReadInt32();
             height = reader.ReadInt32();
         }
+
+        public int Compare(Image image)
+        {
+            if (ResolutionValue == image.ResolutionValue && size == image.size)
+                return 0;
+
+            float ratio = ((float)ResolutionValue / image.ResolutionValue) * ((float)size / image.size);
+            if (ratio > 1.0f)
+                return 1;
+            else if (ratio < 1.0f)
+                return -1;
+            else
+                return 0;
+        }
     }
 }

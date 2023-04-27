@@ -87,11 +87,12 @@ namespace ImgComparer
                 {
                     Duplicate duplicate = new Duplicate
                     {
-                        image1 = imagesDict[reader.ReadString()],
-                        image2 = imagesDict[reader.ReadString()],
+                        image1 = imagesDict.GetValueOptional(reader.ReadString()),
+                        image2 = imagesDict.GetValueOptional(reader.ReadString()),
                         dist = reader.ReadInt32()
                     };
-                    duplicates.Add(duplicate);
+                    if (duplicate.image1 != null && duplicate.image2 != null)
+                        duplicates.Add(duplicate);
                 }
             }
         }
