@@ -16,6 +16,7 @@ namespace ImgComparer.UI
             cbAutoOpen.Checked = settings.AutoOpen;
             tbBlobUrl.Text = settings.ImageBlob;
             tbExcludedExts.Text = settings.ExcludedExt;
+            tbFfmpegPath.Text = settings.FfmpegPath;
         }
 
         private void btOk_Click(object sender, EventArgs e)
@@ -23,6 +24,8 @@ namespace ImgComparer.UI
             settings.AutoOpen = cbAutoOpen.Checked;
             settings.ImageBlob = tbBlobUrl.Text.Trim();
             settings.ExcludedExt = tbExcludedExts.Text.Trim();
+            settings.FfmpegPath = tbFfmpegPath.Text.Trim();
+            Ffmpeg.SetPath(settings.FfmpegPath);
             settings.Save();
             Close();
         }

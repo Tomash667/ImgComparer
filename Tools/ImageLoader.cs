@@ -15,6 +15,10 @@ namespace ImgComparer.Tools
                 Imazen.WebP.SimpleDecoder decoder = new Imazen.WebP.SimpleDecoder();
                 return decoder.DecodeFromBytes(bytes, bytes.Length);
             }
+            else if (ext == ".mp4")
+            {
+                return Ffmpeg.GetBitmap(path);
+            }
             else
             {
                 try

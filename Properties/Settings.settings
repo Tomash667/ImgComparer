@@ -14,5 +14,8 @@
     <Setting Name="ExcludedExt" Type="System.String" Scope="User">
       <Value Profile="(Default)">db</Value>
     </Setting>
+    <Setting Name="FfmpegPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

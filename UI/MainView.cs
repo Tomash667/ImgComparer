@@ -44,6 +44,7 @@ namespace ImgComparer.UI
 
         private void MainView_Load(object sender, EventArgs e)
         {
+            Ffmpeg.SetPath(settings.FfmpegPath);
             db.SetExcludedExtensions(settings.ExcludedExt);
             if (settings.AutoOpen && recentProjects.Count > 0)
             {

@@ -36,6 +36,8 @@
             this.btTest = new System.Windows.Forms.Button();
             this.tbExcludedExts = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbFfmpegPath = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label2
@@ -68,10 +70,10 @@
             // 
             // btOk
             // 
-            this.btOk.Location = new System.Drawing.Point(186, 197);
+            this.btOk.Location = new System.Drawing.Point(186, 235);
             this.btOk.Name = "btOk";
             this.btOk.Size = new System.Drawing.Size(75, 23);
-            this.btOk.TabIndex = 5;
+            this.btOk.TabIndex = 6;
             this.btOk.Text = "Ok";
             this.btOk.UseVisualStyleBackColor = true;
             this.btOk.Click += new System.EventHandler(this.btOk_Click);
@@ -102,11 +104,29 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "Excluded extensions (comma separated):";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 193);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(69, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Ffmpeg path:";
+            // 
+            // tbFfmpegPath
+            // 
+            this.tbFfmpegPath.Location = new System.Drawing.Point(12, 209);
+            this.tbFfmpegPath.Name = "tbFfmpegPath";
+            this.tbFfmpegPath.Size = new System.Drawing.Size(249, 20);
+            this.tbFfmpegPath.TabIndex = 5;
+            // 
             // OptionsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(273, 228);
+            this.ClientSize = new System.Drawing.Size(273, 270);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.tbFfmpegPath);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tbExcludedExts);
             this.Controls.Add(this.btTest);
@@ -136,5 +156,7 @@
         private System.Windows.Forms.Button btTest;
         private System.Windows.Forms.TextBox tbExcludedExts;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tbFfmpegPath;
     }
 }
