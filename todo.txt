@@ -10,4 +10,6 @@
 + tags
 + ctrl + z
 + better excluded handling (by file, reset)
-+ mp4 files
++ mp4 animation
++ better webp version
+	https://github.com/imazen/libwebp-net/tree/master

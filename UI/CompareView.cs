@@ -75,7 +75,7 @@ namespace ImgComparer.UI
                 btBoth.Text = $"Keep both\n({DHash.ToSimilarity(dist.Value)}% similarity)";
 
                 int cmp = image1.Compare(image2);
-                if (complex != null || cmp == 0)
+                if (cmp == 0)
                 {
                     btLeft.Font = normalFont;
                     btRight.Font = normalFont;
