@@ -1,5 +1,7 @@
 ﻿TODO:
 + draw?, better algorithm?
+	+ https://github.com/JohannesBuchner/imagehash
+	+ https://github.com/pgrho/phash
 + zoom
 + replace duplicate, scored -> scored
 + 3 image compare
@@ -11,5 +13,5 @@
 + ctrl + z
 + better excluded handling (by file, reset)
 + mp4 animation
-+ better webp version
-	https://github.com/imazen/libwebp-net/tree/master
++ multithreading
++ when there are multiple duplicates first show with less distance
