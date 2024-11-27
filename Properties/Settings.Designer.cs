@@ -49,18 +49,6 @@ namespace ImgComparer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ImageBlob {
-            get {
-                return ((string)(this["ImageBlob"]));
-            }
-            set {
-                this["ImageBlob"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("db")]
         public string ExcludedExt {
             get {

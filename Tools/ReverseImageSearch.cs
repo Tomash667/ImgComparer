@@ -1,44 +1,55 @@
 ﻿using ImgComparer.Model;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace ImgComparer.Tools
 {
     public static class ReverseImageSearch
     {
-        public static string[] GetSearchUrl(Image image)
+        public static void Open(Image image)
         {
-            string connectionString = Properties.Settings.Default.ImageBlob;
-            if (connectionString == string.Empty)
-                return null;
+            string url = "https://saucenao.com/search.php";
 
-            CloudStorageAccount account = CloudStorageAccount.Parse(connectionString);
-            CloudBlobClient blobClient = account.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference("images");
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(image.Filename);
-            if (!blockBlob.Exists())
-                blockBlob.UploadFromFile(image.path);
-            string url = blockBlob.Uri.AbsoluteUri;
-            return new string[]
-            {
-                $"https://www.google.com/searchbyimage?image_url={url}",
-                $"https://yandex.com/images/search?source=collections&&url={url}&rpt=imageview"
-            };
-        }
+            // Base64 encode the image (needed to embed it in JavaScript)
+            string base64Image = Convert.ToBase64String(File.ReadAllBytes(image.path));
+            string htmlContent = $@"
+<!DOCTYPE html>
+<html>
+<body onload='upload()'>
+    <form id='searchForm' action='{url}' method='post' enctype='multipart/form-data'>
+        <input id='fileInput' type='file' name='file' name='file' style='display:none;' />
+        <input type='submit' value='Submit' />
+    </form>
+    <script>
+		const fileInput = document.querySelector('input[type=file]');
+        const base64Data = '{base64Image}';
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = new Array(byteCharacters.length).fill(0).map((_, i) => byteCharacters.charCodeAt(i));
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], {{ type: 'image/png' }}); // Set correct MIME type
+        const file = new File([blob], '{image.Filename}', {{ type: 'image/png' }}); // File must also have the MIME type
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
 
-        public static bool Test(string connectionString)
-        {
-            try
+        function upload() {{
+            document.getElementById('searchForm').submit();
+		}}
+    </script>
+</body>
+</html>";
+
+            // Save HTML to a temporary file
+            string tempFile = Path.Combine(Path.GetTempPath(), "upload.html");
+            File.WriteAllText(tempFile, htmlContent);
+
+            // Open the temporary file in the default browser
+            Process.Start(new ProcessStartInfo
             {
-                CloudStorageAccount account = CloudStorageAccount.Parse(connectionString);
-                CloudBlobClient blobClient = account.CreateCloudBlobClient();
-                CloudBlobContainer container = blobClient.GetContainerReference("images");
-                return container != null;
-            }
-            catch
-            {
-                return false;
-            }
+                FileName = tempFile,
+                UseShellExecute = true
+            });
         }
     }
 }

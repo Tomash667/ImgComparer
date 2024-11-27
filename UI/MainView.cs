@@ -460,14 +460,7 @@ namespace ImgComparer.UI
         {
             int index = dataGridView1.CurrentRow.Index;
             Image image = images[index];
-            string[] urls = ReverseImageSearch.GetSearchUrl(image);
-            if (urls == null)
-                MessageBox.Show(this, "Reverse image search require image blob connection string set in options.");
-            else
-            {
-                foreach (string url in urls)
-                    System.Diagnostics.Process.Start(url);
-            }
+            ReverseImageSearch.Open(image);
         }
 
         private void recalculateHashesToolStripMenuItem_Click(object sender, EventArgs e)
