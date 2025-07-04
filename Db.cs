@@ -193,6 +193,7 @@ namespace ImgComparer
             }
 
             missing.AddRange(imagesDict.Select(x => x.Value).Where(x => !x.found));
+            duplicates.Sort((x, y) => x.dist.CompareTo(y.dist));
         }
 
         public void CalculateScore()

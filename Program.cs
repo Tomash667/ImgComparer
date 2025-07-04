@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ImgComparer.UI;
+using System;
 using System.Windows.Forms;
-using ImgComparer.UI;
 
 namespace ImgComparer
 {
