@@ -230,6 +230,13 @@ namespace ImgComparer.UI
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string errors = db.Verify();
+            if (errors != null)
+            {
+                UpdateStatus(calculateScore: false, changed: true, refreshImages: false);
+                MessageBox.Show(this, errors, "Verification error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
             Utility.DeleteFiles(this);
             db.Save();
             UpdateStatus(calculateScore: false, changed: false, refreshImages: false);

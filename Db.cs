@@ -281,5 +281,16 @@ namespace ImgComparer
                 .Select(x => '.' + x)
                 .ToArray();
         }
+
+        public string Verify()
+        {
+            Image[] invalidImages = newImages.Where(img => img.score != 0).ToArray();
+            if (invalidImages.Length == 0)
+                return null;
+
+            foreach (Image img in invalidImages)
+                img.score = 0;
+            return $"Fixed images with invalid score:\n{string.Join("\n", invalidImages.Select(img => img.Filename))}";
+        }
     }
 }
